@@ -1,0 +1,19 @@
+Package: HandLocalizationSignals
+Type: Package
+Title: Download and analyse data on hand localization signals
+Version: 2020.12.2
+Authors@R: c(person("B. Marius", "'t Hart", email = "thartbm@gmail.com",
+                  role = c("aut", "cre")),
+             person("Maria N.", "Ayala", email = "mayala@research.baycrest.org", role = "aut"),
+             person("Denise Y.P.", "Henriques", email = "deniseh@yorku.ca", role = "aut"))
+Maintainer: Marius 't Hart <thartbm@gmail.com>
+Description: This package downloads and analyses all data for a project on active and passive hand localization.
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 6.1.1
+Depends:
+  R (>= 3.5)
+Imports:
+  stats,
+  graphics,
+  grDevices

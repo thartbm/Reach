@@ -1,5 +1,27 @@
+# training data =====
+
+getTrainingReachDeviations <- function(groups='all', sessions=c('rotated','aligned'), at='maxvel') {
+  
+  # at:
+  
+  
+  
+  pfiles <- read.csv('data/files.csv', stringsAsFactors = F)
+  fileURLs <- read.csv('data/urls.csv', stringsAsFactors = F)
+  
+  if (groups[1] == 'all') {
+    groups <- unique(fileURLs$group)
+  }
+
+}
+
+# no-cursor data =====
 
 
+# localization data =====
+
+
+# circle fitting ===== 
 
 correctArcShift <- function(df) {
   
