@@ -1,7 +1,7 @@
-Package: HandLocalizationSignals
+Package: handlocs
 Type: Package
 Title: Download and analyse data on hand localization signals
-Version: 2020.12.2
+Version: 2020.12.4
 Authors@R: c(person("B. Marius", "'t Hart", email = "thartbm@gmail.com",
                   role = c("aut", "cre")),
              person("Maria N.", "Ayala", email = "mayala@research.baycrest.org", role = "aut"),

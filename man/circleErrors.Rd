@@ -22,6 +22,3 @@ The mean squared error between the distances of \code{X} and
 \description{
 Get mean squared error between coordinates and a circle
 }
-\examples{
-
-}

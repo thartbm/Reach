@@ -2,34 +2,48 @@
 # work on:
 # Baseline/copyOSFdata.py
 
-syncData <- function(groups='all', sections='all', overwrite=TRUE) {
+
+#' Download data from OSF and unzip into folder structure in \code{data/} folder.
+#' 
+#' @param groups vector of group names for which to download data (default: 'all')
+#' @param sections vector of task sections for which to download data (default: 'all')
+#' @param overwrite boolean, if \code{FALSE}: do not download zipfiles that already exist
+#' @return empty
+#' @examples
+#' #dataDownload(groups=c('control', 'instructed'), sections=c('aligned'))
+#' @export
+dataDownload <- function(groups='all', sections='all', overwrite=FALSE) {
   
-  fileURLs <- read.csv('data/urls.csv', stringsAsFactors = F)
+  utils::data('urls', package='handlocs')
+  
+  #urls <- handlocs::urls
+  
+  #fileURLs <- read.csv('data/urls.csv', stringsAsFactors = F)
   
   if (groups[1] != 'all') {
-    fileURLs <- fileURLs[which(fileURLs$group %in% groups),]
+    urls <- urls[which(urls$group %in% groups),]
   }
   
   if (sections[1] != 'all') {
-    fileURLs <- fileURLs[which(fileURLs$section %in% sections),]
+    urls <- urls[which(urls$section %in% sections),]
   }
   
-  for (fileno in c(1:dim(fileURLs)[1])) {
+  for (fileno in c(1:dim(urls)[1])) {
     
-    filename <- sprintf('%s_%s.zip',fileURLs$group[fileno],fileURLs$section[fileno])
-    folderfilename <- sprintf('data/raw/zip/%s',filename)
+    filename <- sprintf('%s_%s.zip',urls$group[fileno],urls$section[fileno])
+    folderfilename <- sprintf('data/%s',filename)
     
     if (overwrite | !file.exists(folderfilename)) {
       
-      url = as.character(fileURLs$URL[fileno])
+      url = as.character(urls$URL[fileno])
       
       cat(sprintf("Downloading: '%s' from '%s'\n", folderfilename, url))
       
-      download.file(url = url, 
-                    destfile = folderfilename, 
-                    method = 'auto', 
-                    quiet = FALSE, 
-                    mode = "wb")
+      utils::download.file(url = url, 
+                           destfile = folderfilename, 
+                           method = 'auto', 
+                           quiet = FALSE, 
+                           mode = "wb")
       
     } else {
       
@@ -37,25 +51,37 @@ syncData <- function(groups='all', sections='all', overwrite=TRUE) {
       
     }
     
-    unzip(zipfile = folderfilename, exdir = 'data/raw/')
+    utils::unzip(zipfile = folderfilename, exdir = 'data/')
     
   }
   
-  checkFiles(groups=groups, sections=sections)
+  handlocs::dataFilecheck(groups=groups, sections=sections)
   
 }
 
-checkFiles <- function(groups='all', sections='sections', verbose=F) {
+#' Check if csv files from requested groups and sections exist
+#' 
+#' @param groups vector of group names for which to download data (default: 'all')
+#' @param sections vector of task sections for which to download data (default: 'all')
+#' @param verbose boolean, if \code{TRUE}: print names of all missing files
+#' @return empty
+#' @examples
+#' #dataFilecheck(groups='all', sections=c('aligned'), verbose=TRUE)
+#' @export
+dataFilecheck <- function(groups='all', sections='sections', verbose=FALSE) {
   
-  pfiles <- read.csv('data/files.csv', stringsAsFactors = F)
-  fileURLs <- read.csv('data/urls.csv', stringsAsFactors = F)
+  utils::data('files', package='handlocs')
+  utils::data('urls', package='handlocs')
   
+  #files <- handlocs:::files
+  #urls <- handlocs:::urls
+
   if (groups[1] != 'all') {
-    fileURLs <- fileURLs[which(fileURLs$group %in% groups),]
+    urls <- urls[which(urls$group %in% groups),]
   }
   
   if (sections[1] != 'all') {
-    fileURLs <- fileURLs[which(fileURLs$section %in% sections),]
+    urls <- urls[which(urls$section %in% sections),]
   }
   
   
@@ -75,43 +101,43 @@ checkFiles <- function(groups='all', sections='sections', verbose=F) {
   
   Nmissing <- 0
   
-  for (rown in c(1:dim(fileURLs)[1])) {
+  for (rown in c(1:dim(urls)[1])) {
     
-    group <- fileURLs$group[rown]
-    section <- fileURLs$section[rown]
+    group <- urls$group[rown]
+    section <- urls$section[rown]
   
     filetypes <- sectionfiles[[section]]
     
-    participants <- pfiles$participant[which(pfiles$group == group)]
+    participants <- files$participant[which(files$group == group)]
     
     for (filetype in filetypes) {
       
       for (participant in participants) {
         
-        prow <- which(pfiles$participant == participant)
+        prow <- which(files$participant == participant)
         
-        pfile <- pfiles[prow,filetype]
+        pfile <- files[prow,filetype]
         
         if (nchar(pfile) > 0) {
           
           # this file *should* be there:
-          filename <- sprintf('data/raw/%s/%s/%s',group,participant,pfile)
+          filename <- sprintf('data/%s/%s/%s',group,participant,pfile)
           
           if (!file.exists(filename)) {
             if (verbose) { cat(sprintf('WARNING: missing file? %s\n',filename)) }
             Nmissing <- Nmissing + 1
           }
           
-        }
+        } # check existence of files that should be there
         
-      }
+      } # end loop through participants
       
-    }
+    } # end loop through filetypes
     
-  }
+  } # end loop through section files
   
   if (Nmissing) {
-    cat(sprintf('WARNING: %d missing files!\n', Nmissing))
+    cat(sprintf('WARNING: %d missing files! (set verbose=T to see which)\n', Nmissing))
   }
   
 }
