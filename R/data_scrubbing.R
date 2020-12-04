@@ -7,11 +7,11 @@ getTrainingReachDeviations <- function(groups='all', sessions=c('rotated','align
   # - maxvel_velprof (grabbed from velocity profile)
   # - perc33 (at 33 percent of home-target distance, can be other percentages)
   
-  pfiles <- read.csv('data/files.csv', stringsAsFactors = F)
-  fileURLs <- read.csv('data/urls.csv', stringsAsFactors = F)
+  utils::data('files', package='handlocs')
+  utils::data('urls', package='handlocs')
   
   if (groups[1] == 'all') {
-    groups <- unique(fileURLs$group)
+    groups <- unique(urls$group)
   }
   
   # for each group there should now be:
@@ -41,11 +41,11 @@ getNoCursorReachDeviations <- function(groups='all', sessions=c('rotated','align
   # - maxvel_velprof (grabbed from velocity profile)
   # - perc33 (at 33 percent of home-target distance, can be other percentages)
   
-  pfiles <- read.csv('data/files.csv', stringsAsFactors = F)
-  fileURLs <- read.csv('data/urls.csv', stringsAsFactors = F)
+  utils::data('files', package='handlocs')
+  utils::data('urls', package='handlocs')
   
   if (groups[1] == 'all') {
-    groups <- unique(fileURLs$group)
+    groups <- unique(urls$group)
   }
   
   # for each group there should now be:
@@ -76,12 +76,11 @@ getNoCursorReachDeviations <- function(groups='all', sessions=c('rotated','align
 #' Shift localization responses so they are centred on the origin
 #' 
 #' @param df Data frame of localization data
-#' @return The data frame with corrected \code{tapx_cm} and \code{tapy_cm} columns. So
-#' that the localization responses fall closest to a circle with radius 12 cm and
-#' origin (0,0).
-#' @examples
-#' 
-correctArcShift <- function(df) {
+#' @return The data frame with corrected \code{tapx_cm} and \code{tapy_cm} columns. The
+#' corrected localization responses fall closest to a circle with radius 12 cm and
+#' origin (0,0). Only response with \code{df$selected == 1} are used for this correction.
+#' @export
+circleCorrect <- function(df) {
   
   idx <- which(df$selected == 1)
   tapx <- df$tapx_cm[idx]
@@ -89,7 +88,7 @@ correctArcShift <- function(df) {
   
   control <- list('maxit'=10000, 'ndeps'=1e-9 )
   par <- c('xc'=0,'yc'=0)
-  sol <- optim(par=par, circleErrors, gr=NULL, tapx, tapy, r=12, control=control)
+  sol <- stats::optim(par=par, circleErrors, gr=NULL, tapx, tapy, r=12, control=control)
   
   # this also corrects the non-selected trials:
   df$tapx_cm <- df$tapx_cm - sol$par[['xc']]
@@ -107,8 +106,7 @@ correctArcShift <- function(df) {
 #' @param r The radius of the circle
 #' @return The mean squared error between the distances of \code{X} and 
 #' \code{Y} from the position in par and the radius \code{r}.
-#' @examples
-#' 
+#' @export
 circleErrors <- function(par,X,Y,r) {
   
   return(mean((sqrt((X-par[['xc']])^2+(Y-par[['yc']])^2)-r)^2))
