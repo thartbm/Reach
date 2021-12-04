@@ -12,10 +12,8 @@ License: GPL-3 + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 Depends:
-  R (>= 3.5),
-  osfr (>= 0.2.8)
+  R (>= 3.5)
 Imports:
   stats,
   graphics,
-  grDevices,
-  osfr
+  grDevices
