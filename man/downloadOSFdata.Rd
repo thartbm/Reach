@@ -13,6 +13,8 @@ downloadOSFdata(repository, filelist, folder, overwrite = TRUE)
 of filenames to download from those folders on the OSF repository}
 
 \item{folder}{folder in the current working directory to store files in}
+
+\item{overwrite}{(Boolean) Whether files should be overwritten if already there.}
 }
 \value{
 empty
