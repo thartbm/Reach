@@ -33,7 +33,7 @@ getAllTrainingReachDeviations <- function(groups='all', sessions=c('rotated','al
 
 getFileReachDeviations <- function(filename) {
   
-  df <- read.csv(filename, stringsAsFactors = FALSE)
+  df <- utils::read.csv(filename, stringsAsFactors = FALSE)
   
   df <- df[which(df$maxvelocity == 1),]
   
