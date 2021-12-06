@@ -2,6 +2,7 @@
 
 export(circleCorrect)
 export(circleErrors)
-export(dataDownload)
 export(dataFilecheck)
+export(downloadData)
+export(downloadOSFdata)
 export(rotateCoordinates)
