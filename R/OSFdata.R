@@ -3,6 +3,7 @@
 #' @param repository OSF repository to download from (string of 5 characters)
 #' @param filelist named list where names are folders, and entries are vectors
 #' of filenames to download from those folders on the OSF repository
+#' @param overwrite (Boolean) Whether files should be overwritten if already there.
 #' @param folder folder in the current working directory to store files in
 #' @return empty
 #' @export
