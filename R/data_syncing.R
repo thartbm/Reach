@@ -7,12 +7,12 @@
 #' 
 #' @param groups vector of group names for which to download data (default: 'all')
 #' @param sections vector of task sections for which to download data (default: 'all')
-#' @param overwrite boolean, if \code{FALSE}: do not download zipfiles that already exist
+#' @param repository OSF repository to download from
 #' @return empty
 #' @examples
 #' #dataDownload(groups=c('control', 'instructed'), sections=c('aligned'))
 #' @export
-dataDownload <- function(groups='all', sections='all', overwrite=FALSE) {
+downloadData <- function(groups='all', sections='all', overwrite=FALSE) {
   
   utils::data('urls', package='handlocs')
   
