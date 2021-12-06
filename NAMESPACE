@@ -3,6 +3,5 @@
 export(circleCorrect)
 export(circleErrors)
 export(dataFilecheck)
-export(downloadData)
 export(downloadOSFdata)
 export(rotateCoordinates)
