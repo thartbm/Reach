@@ -108,7 +108,7 @@ unzipZips <- function(filelist,folder,removezips=FALSE) {
       
       # check if it is a zip file:
       ext <- tools::file_ext(filename)
-      if (ext == 'zip') {
+      if (ext == 'zip' & file.exists(sprintf('%s/%s',folder,filename))) {
         utils::unzip(zipfile=sprintf('%s/%s',folder,filename),
                      exdir=folder)
       }
