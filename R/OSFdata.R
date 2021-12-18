@@ -21,6 +21,13 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
   # connect to the repository:
   mainOSFnode <- osfr::osf_retrieve_node(repository)
   
+  
+  if (overwrite) {
+    conflict <- 'overwrite'
+  } else {
+    conflict <- 'skip'
+  }
+  
   # loop through entries in filelist
   for (folderno in c(1:length(names(filelist)))) {
     
@@ -59,7 +66,7 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
       if (!file.exists(sprintf('data/%s',files$name[idx])) | overwrite) {
         osfr::osf_download(x = files[idx,], 
                            path = sprintf('folder/%s', folder, filename), 
-                           overwrite = overwrite)
+                           conflicts = conflict)
       }
       
     }
