@@ -113,7 +113,7 @@ unzipZips <- function(filelist,folder,removezips=FALSE) {
                      exdir=folder)
       }
       
-      if (removezips) {
+      if (removezips & file.exists(sprintf('%s/%s',folder,filename))) {
         file.remove(sprintf('%s/%s',folder,filename))
       }
       
