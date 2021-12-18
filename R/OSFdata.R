@@ -111,12 +111,12 @@ unzipZips <- function(filelist,folder,removezips=FALSE) {
       if (ext == 'zip' & file.exists(sprintf('%s/%s',folder,filename))) {
         utils::unzip(zipfile=sprintf('%s/%s',folder,filename),
                      exdir=folder)
+        if (removezips & file.exists(sprintf('%s/%s',folder,filename))) {
+          file.remove(sprintf('%s/%s',folder,filename))
+        }
+        
       }
-      
-      if (removezips & file.exists(sprintf('%s/%s',folder,filename))) {
-        file.remove(sprintf('%s/%s',folder,filename))
-      }
-      
+
     }
     
   }
