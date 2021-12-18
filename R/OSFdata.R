@@ -22,7 +22,9 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
   mainOSFnode <- osfr::osf_retrieve_node(repository)
   
   # loop through entries in filelist
-  for (foldername in names(filelist)) {
+  for (foldernno in c(1:length(names(filelist)))) {
+    
+    foldername <- names(filelist)[folderno]
     
     # foldername needs to have a trailing back slash:
     if (substr(foldername,nchar(foldername),nchar(foldername)) != "\\" ) {
@@ -34,7 +36,7 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
     
     print(files)
     
-    filenames <- filelist[[foldername]]
+    filenames <- filelist[[names(filelist)[folderno]]]
     
     print(filenames)
     
