@@ -7,7 +7,7 @@
 #' @param folder folder in the current working directory to store files in
 #' @return empty
 #' @export
-downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
+downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE) {
   
   # get the 5-character repository name:
   slash_idx <- as.numeric(gregexpr(pattern ='/',repository)[[1]])
@@ -73,8 +73,49 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
     
   }
   
+  if (unzip) {
+    handlocs::unzipZips(filelist=filelist,
+                        folder=folder,
+                        removezips=removezips)
+  }
+  
 
 }
+
+#' Download data from OSF and unzip into folder structure in \code{data/} folder.
+#' 
+#' @param filelist named list where names are folders, and entries are vectors
+#' of filenames to download from those folders on the OSF repository
+#' @param folder folder in the current working directory to store files in
+#' @param removezips (Boolean) remove zip files after unzipping?
+#' @return empty
+#' @export
+unzipZips <- function(filelist,folder,removezips=FALSE) {
+  
+  # loop through entries in filelist
+  for (folderno in c(1:length(names(filelist)))) {
+    
+    foldername <- names(filelist)[folderno]
+    
+    # foldername needs to have a trailing back slash:
+    if (substr(foldername,nchar(foldername),nchar(foldername)) != "\\" ) {
+      foldername <- sprintf('%s\\',foldername)
+    }
+    
+    filenames <- filelist[[names(filelist)[folderno]]]
+    
+    for (filename in filenames) {
+      
+      # check if it is a zip file:
+      ext <- tools::file_ext(filename)
+      print(ext)
+      
+    }
+    
+  }
+  
+}
+
 
 #' Check if csv files from requested groups and sections exist
 #' 
