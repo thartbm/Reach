@@ -34,10 +34,12 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
     # list files in the OSF folder:
     files <- osfr::osf_ls_files(mainOSFnode, path=foldername, n_max=500)
     
+    cat('files on OSF:\n')
     print(files)
     
     filenames <- filelist[[names(filelist)[folderno]]]
     
+    cat('files to download:\n')
     print(filenames)
     
     for (filename in filenames) {
