@@ -65,7 +65,7 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE) {
       # download the file:
       if (!file.exists(sprintf('data/%s',files$name[idx])) | overwrite) {
         osfr::osf_download(x = files[idx,], 
-                           path = sprintf('folder/%s', folder, filename), 
+                           path = sprintf('%s', folder), 
                            conflicts = conflict)
       }
       
