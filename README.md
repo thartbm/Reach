@@ -1,2 +1,3 @@
-# HandLocalizationSignals
-This is a package with functions to be used in a project on where we localize our hand.
+# Reach
+
+This is a package with functions for use in analyzing data from reach tasks.
