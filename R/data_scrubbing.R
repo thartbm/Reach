@@ -85,51 +85,6 @@ getNoCursorReachDeviations <- function(groups='all', sessions=c('rotated','align
 
 
 
-# localization data =====
-
-# localization files are already 1 sample (x,y) / (a,r) per trial
-
-# circle fitting ===== 
-
-#' Shift localization responses so they are centred on the origin
-#' 
-#' @param df Data frame of localization data
-#' @return The data frame with corrected \code{tapx_cm} and \code{tapy_cm} columns. The
-#' corrected localization responses fall closest to a circle with radius 12 cm and
-#' origin (0,0). Only response with \code{df$selected == 1} are used for this correction.
-#' @export
-circleCorrect <- function(df) {
-  
-  idx <- which(df$selected == 1)
-  tapx <- df$tapx_cm[idx]
-  tapy <- df$tapy_cm[idx]
-  
-  control <- list('maxit'=10000, 'ndeps'=1e-9 )
-  par <- c('xc'=0,'yc'=0)
-  sol <- stats::optim(par=par, circleErrors, gr=NULL, tapx, tapy, r=12, control=control)
-  
-  # this also corrects the non-selected trials:
-  df$tapx_cm <- df$tapx_cm - sol$par[['xc']]
-  df$tapy_cm <- df$tapy_cm - sol$par[['yc']]
-  
-  return(df)
-  
-}
-
-#' Get mean squared error between coordinates and a circle
-#' 
-#' @param par Vector with xc and yc parameters: x and y of the circle's middle
-#' @param X Vector of X coordinates
-#' @param Y Vector of Y coordinates
-#' @param r The radius of the circle
-#' @return The mean squared error between the distances of \code{X} and 
-#' \code{Y} from the position in par and the radius \code{r}.
-#' @export
-circleErrors <- function(par,X,Y,r) {
-  
-  return(mean((sqrt((X-par[['xc']])^2+(Y-par[['yc']])^2)-r)^2))
-  
-}
 
 # utility functions =====
 
