@@ -51,3 +51,15 @@ circleErrors <- function(par,X,Y,r) {
   return(mean((sqrt((X-par[['xc']])^2+(Y-par[['yc']])^2)-r)^2))
   
 }
+
+localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE) {
+  
+  if ('selected' %in% names(df)) {
+    df <- df[which(df$selected == 1),]
+  }
+  
+  df <- circleCorrect(df, unit=unti, var=locvar,r=r)
+  
+  
+  
+}
