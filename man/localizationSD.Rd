@@ -5,7 +5,7 @@
 \title{Get the standard deviation of localization using a spline as 'mean'.}
 \usage{
 localizationSD(df, unit = "cm", locvar = "tap", handvar = "hand",
-  r = 1, CC = TRUE, spar = 0.5)
+  r = 1, CC = TRUE, spar = 0.75)
 }
 \arguments{
 \item{df}{Data frame with localization data.}

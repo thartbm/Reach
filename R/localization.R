@@ -63,8 +63,8 @@ circleErrors <- function(par,X,Y,r) {
 #' @param spar Smoothing parameter for the spline (0,1) (default: \code{0.50}). 
 #' @return A spline object that predicts localization errors over reach angle.
 #' @export
-localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.50) {
-
+localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.75) {
+  
   # get data in useful form:
   df <- prepareSplineVariables(df, CC=CC, handvar=handvar, locvar=locvar, unit=unit, r=r)
   
@@ -72,9 +72,10 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
   spl <- getLocalizationSpline(df, spar=spar)
   
   # predict localization error based on fitted smooth spline:
-  ple <- predict(spl, x=df$reachangle_deg)$y
+  PredLoc <- predict(spl, x=df$reachangle_deg)$y
+  PredLocError <- PredLoc - df$localizationerror_deg
   
-  print(ple)
+  print(mean(PredLocError))
   
   # get differences with prediction
   # convert to "standard deviation"
