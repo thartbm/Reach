@@ -52,14 +52,21 @@ circleErrors <- function(par,X,Y,r) {
   
 }
 
-localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE) {
+localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.50) {
   
   if ('selected' %in% names(df)) {
     df <- df[which(df$selected == 1),]
   }
   
-  df <- circleCorrect(df, unit=unti, var=locvar,r=r)
+  if (CC) {
+    df <- circleCorrect(df, unit=unit, var=locvar,r=r)
+  }
   
+  yvar <- sprintf('%sy_%s',locvar,unit)
+  xvar <- sprintf('%sx_%s',locvar,unit)
   
+  df$localizationangle_deg <- (atan2(df[,yvar],df[,xvar])/pi)*180
+  
+  spl <- smooth.spline(x=df$targetangle_deg, y=df$localizationangle_deg, spar=spar, keep.data=F )
   
 }
