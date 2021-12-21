@@ -63,7 +63,7 @@ circleErrors <- function(par,X,Y,r) {
 #' @param spar Smoothing parameter for the spline (0,1) (default: \code{0.50}). 
 #' @return A spline object that predicts localization errors over reach angle.
 #' @export
-getLocalizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.50) {
+localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.50) {
 
   df <- prepareSplineVariables(df, CC=CC, handvar=handvar, locvar=locvar, unit=unit, r=r)
   
