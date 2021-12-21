@@ -23,7 +23,7 @@ circleCorrect <- function(df, unit='cm', var='tap', r=1) {
   }
   
   tapx <- df[idx,sprintf('%sx_%s',var,unit)]
-  tapy <- df[idx,sprintf('%sx_%s',var,unit)]
+  tapy <- df[idx,sprintf('%sy_%s',var,unit)]
   
   control <- list('maxit'=10000, 'ndeps'=1e-9 )
   par <- c('xc'=0,'yc'=0)
