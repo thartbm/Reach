@@ -74,8 +74,6 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
   # predict localization error based on fitted smooth spline:
   ple <- predict(spl, x=df$reachangle_deg)$y
   
-  print(ple)
-  
   # get differences with prediction
   # convert to "standard deviation"
   
