@@ -76,7 +76,7 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
   PredLocError <- PredLoc - df$localizationerror_deg
   
   print(mean(PredLocError))
-  
+
   # get differences with prediction
   # convert to "standard deviation"
   
