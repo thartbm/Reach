@@ -75,7 +75,7 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
   PredLoc <- predict(spl, x=df$reachangle_deg)$y
   PredLocError <- PredLoc - df$localizationerror_deg
   
-  return( sqrt( sum( PredLocError^2 ) ) )
+  return( sqrt( ( sum( PredLocError^2 ) / length(PredLocError) ) ) )
   
 }
 
