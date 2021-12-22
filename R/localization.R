@@ -144,7 +144,7 @@ prepareSplineVariables <- function(df, CC=TRUE, handvar='hand', locvar='tap', un
   localizationerror_deg <- (atan2(tempdf$Y,tempdf$X)/pi)*180
   
   # do we need this at all?
-  df$localizationangle_deg <- df$reachangle_deg + localizationangle_deg
+  df$localizationangle_deg <- df$reachangle_deg + localizationerror_deg
   
   # get localization error:
   df$localizationerror_deg <- localizationerror_deg
