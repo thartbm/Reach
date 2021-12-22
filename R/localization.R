@@ -183,7 +183,7 @@ reorientCoordinatesBy <- function(df,X,Y,orient,CCW=FALSE) {
       for (orientval in orientvals) {
         or.idx <- which(df[,orient] == orientval)
         coords <- rotateCoordinates(data.frame('X'=df[or.idx,X],'Y'=df[or.idx,Y]),
-                                    angle=orient*multiple)
+                                    angle=orient*multiply)
         df[or.idx,X] <- coords$X
         df[or.idx,Y] <- coords$Y
       }
