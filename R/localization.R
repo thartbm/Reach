@@ -65,7 +65,7 @@ circleErrors <- function(par,X,Y,r) {
 #' spline interpolation (after fitting the spline). 
 #' @return A spline object that predicts localization errors over reach angle.
 #' @export
-localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.85, rm.Extr=FALSE) {
+localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=TRUE, spar=0.99, rm.Extr=FALSE) {
   
   # get data in useful form:
   df <- prepareSplineVariables(df, CC=CC, handvar=handvar, locvar=locvar, unit=unit, r=r)
