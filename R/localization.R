@@ -60,7 +60,7 @@ circleErrors <- function(par,X,Y,r) {
 #' @param handvar The variable name of hand position (default: \code{hand}).
 #' @param r Radius of localization arc (default: 12).
 #' @param CC (boolean) Perform circle correction (default: \code{TRUE}).
-#' @param spar Smoothing parameter for the spline (0,1) (default: \code{0.85}).
+#' @param spar Smoothing parameter for the spline (0,1) (default: \code{0.99}).
 #' @param rm.Extr (boolean) Remove the highest and lowest reach angles before 
 #' spline interpolation (after fitting the spline). 
 #' @return A spline object that predicts localization errors over reach angle.
@@ -92,10 +92,10 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
 #' 
 #' @param df Data frame with localization data, this contains at least the
 #' variables: \code{reachangle_deg} and \code{localizationerror_deg}.
-#' @param spar Smoothing parameter for the spline (0,1) (default: \code{0.50}). 
+#' @param spar Smoothing parameter for the spline (0,1) (default: \code{0.99}). 
 #' @return A spline object that predicts localization errors over reach angle.
 #' @export
-getLocalizationSpline <- function(df, spar=0.50) {
+getLocalizationSpline <- function(df, spar=0.99) {
   
   # fit a smooth spline to predict localization error by reach angle:
   spl <- smooth.spline(x=df$reachangle_deg, y=df$localizationerror_deg, spar=spar, keep.data=F )

@@ -4,13 +4,13 @@
 \alias{getLocalizationSpline}
 \title{Get a smoothed spline object fit on localization errors over reach angles.}
 \usage{
-getLocalizationSpline(df, spar = 0.5)
+getLocalizationSpline(df, spar = 0.99)
 }
 \arguments{
 \item{df}{Data frame with localization data, this contains at least the
 variables: \code{reachangle_deg} and \code{localizationerror_deg}.}
 
-\item{spar}{Smoothing parameter for the spline (0,1) (default: \code{0.50}).}
+\item{spar}{Smoothing parameter for the spline (0,1) (default: \code{0.99}).}
 }
 \value{
 A spline object that predicts localization errors over reach angle.
