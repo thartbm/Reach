@@ -5,7 +5,7 @@
 \title{Get the standard deviation of localization using a spline as 'mean'.}
 \usage{
 localizationSD(df, unit = "cm", locvar = "tap", handvar = "hand",
-  r = 1, CC = TRUE, spar = 0.75)
+  r = 1, CC = TRUE, spar = 0.85, rm.Extr = FALSE)
 }
 \arguments{
 \item{df}{Data frame with localization data.}
@@ -20,7 +20,10 @@ localizationSD(df, unit = "cm", locvar = "tap", handvar = "hand",
 
 \item{CC}{(boolean) Perform circle correction (default: \code{TRUE}).}
 
-\item{spar}{Smoothing parameter for the spline (0,1) (default: \code{0.50}).}
+\item{spar}{Smoothing parameter for the spline (0,1) (default: \code{0.85}).}
+
+\item{rm.Extr}{(boolean) Remove the highest and lowest reach angles before 
+spline interpolation (after fitting the spline).}
 }
 \value{
 A spline object that predicts localization errors over reach angle.
