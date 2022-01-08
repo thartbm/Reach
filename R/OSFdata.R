@@ -1,10 +1,13 @@
+
 #' Download data from OSF and unzip into folder structure in \code{data/} folder.
 #' 
 #' @param repository OSF repository to download from (string of 5 characters)
 #' @param filelist named list where names are folders, and entries are vectors
 #' of filenames to download from those folders on the OSF repository
 #' @param overwrite (Boolean) Whether files should be overwritten if already there.
-#' @param folder folder in the current working directory to store files in
+#' @param folder Folder in the current working directory to store files in.
+#' @param unzip (Boolean) Whether or not to unzip zip files.
+#' @param removezips (Boolean) Whether or not to remove zip files after unzipping.
 #' @return empty
 #' @export
 downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE) {
@@ -74,7 +77,7 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALS
   }
   
   if (unzip) {
-    handlocs::unzipZips(filelist=filelist,
+    Reach::unzipZips(filelist=filelist,
                         folder=folder,
                         removezips=removezips)
   }

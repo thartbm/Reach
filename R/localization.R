@@ -80,7 +80,7 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
   }
   
   # predict localization error based on fitted smooth spline:
-  PredLoc <- predict(spl, x=df$reachangle_deg[idx])$y
+  PredLoc <- stats::predict(spl, x=df$reachangle_deg[idx])$y
   PredLocError <- PredLoc - df$localizationerror_deg[idx]
   
   # pseudo standard deviation:
@@ -98,7 +98,7 @@ localizationSD <- function(df, unit='cm', locvar='tap', handvar='hand', r=1, CC=
 getLocalizationSpline <- function(df, spar=0.99) {
   
   # fit a smooth spline to predict localization error by reach angle:
-  spl <- smooth.spline(x=df$reachangle_deg, y=df$localizationerror_deg, spar=spar, keep.data=F )
+  spl <- stats::smooth.spline(x=df$reachangle_deg, y=df$localizationerror_deg, spar=spar, keep.data=F )
   
   return(spl)
   

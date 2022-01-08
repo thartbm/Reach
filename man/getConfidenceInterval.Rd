@@ -4,7 +4,7 @@
 \alias{getConfidenceInterval}
 \title{Get a confidence interval for a summary statistic of a numeric vector.}
 \usage{
-getConfidenceInterval(data, variance = var(data, na.rm = TRUE),
+getConfidenceInterval(data, variance = stats::var(data, na.rm = TRUE),
   conf.level = 0.95, method = "t-distr", resamples = 1000,
   FUN = mean)
 }
