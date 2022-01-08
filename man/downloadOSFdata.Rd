@@ -13,9 +13,13 @@ downloadOSFdata(repository, filelist, folder, overwrite = TRUE,
 \item{filelist}{named list where names are folders, and entries are vectors
 of filenames to download from those folders on the OSF repository}
 
-\item{folder}{folder in the current working directory to store files in}
+\item{folder}{Folder in the current working directory to store files in.}
 
 \item{overwrite}{(Boolean) Whether files should be overwritten if already there.}
+
+\item{unzip}{(Boolean) Whether or not to unzip zip files.}
+
+\item{removezips}{(Boolean) Whether or not to remove zip files after unzipping.}
 }
 \value{
 empty

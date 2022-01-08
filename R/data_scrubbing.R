@@ -1,88 +1,88 @@
 # training data =====
 
-getAllTrainingReachDeviations <- function(groups='all', sessions=c('rotated','aligned'), at='maxvel') {
-  
-  # at:
-  # - maxvel_screened (indicated in screening)
-  # - maxvel_velprof (grabbed from velocity profile)
-  # - perc33 (at 33 percent of home-target distance, can be other percentages)
-  
-  utils::data('files', package='handlocs')
-  utils::data('urls', package='handlocs')
-  
-  if (groups[1] == 'all') {
-    groups <- unique(urls$group)
-  }
-  
-  # for each group there should now be:
-  # - reach deviations as a matrix or data frame
-  # with for one dimension:
-  # - trial number
-  # - rotation
-  # - block
-  # - condition: aligned or rotated
-  # and the other dimension:
-  # - participant
-  
-  # (if participants are columns)
-  # can we have multiple indices with the other data?
-  # or should they be in another file?
-  # what is the easiest / least confusing to use?
-
-}
-
-getFileReachDeviations <- function(filename) {
-  
-  df <- utils::read.csv(filename, stringsAsFactors = FALSE)
-  
-  df <- df[which(df$maxvelocity == 1),]
-  
-  for (target in unique(df$targetangle_deg)) {
-    
-    idx <- which(df$targetangle_deg == deg)
-    
-    df[idx,c('handx_cm','handy_cm')] <- rotateCoordinates(df[idx,c('handx_cm','handy_cm')], -target)
-    
-  }
-  
-  
-  
-}
-
-# no-cursor data =====
-
-getNoCursorReachDeviations <- function(groups='all', sessions=c('rotated','aligned'), at='endpoint') {
-  
-  # at:
-  # - endpoint
-  # - maxvel_screened (indicated in screening)
-  # - maxvel_velprof (grabbed from velocity profile)
-  # - perc33 (at 33 percent of home-target distance, can be other percentages)
-  
-  utils::data('files', package='handlocs')
-  utils::data('urls', package='handlocs')
-  
-  if (groups[1] == 'all') {
-    groups <- unique(urls$group)
-  }
-  
-  # for each group there should now be:
-  # - reach deviations as a matrix or data frame
-  # with for one dimension:
-  # - trial number
-  # - rotation
-  # - block
-  # - condition: aligned, inclusive or exclusive
-  # and the other dimension:
-  # - participant
-  
-  # (if participants are columns)
-  # can we have multiple indices with the other data?
-  # or should they be in another file?
-  # what is the easiest / least confusing to use?
-  
-}
-
+# getAllTrainingReachDeviations <- function(groups='all', sessions=c('rotated','aligned'), at='maxvel') {
+#   
+#   # at:
+#   # - maxvel_screened (indicated in screening)
+#   # - maxvel_velprof (grabbed from velocity profile)
+#   # - perc33 (at 33 percent of home-target distance, can be other percentages)
+#   
+#   utils::data('files', package='handlocs')
+#   utils::data('urls', package='handlocs')
+#   
+#   if (groups[1] == 'all') {
+#     groups <- unique(urls$group)
+#   }
+#   
+#   # for each group there should now be:
+#   # - reach deviations as a matrix or data frame
+#   # with for one dimension:
+#   # - trial number
+#   # - rotation
+#   # - block
+#   # - condition: aligned or rotated
+#   # and the other dimension:
+#   # - participant
+#   
+#   # (if participants are columns)
+#   # can we have multiple indices with the other data?
+#   # or should they be in another file?
+#   # what is the easiest / least confusing to use?
+# 
+# }
+# 
+# getFileReachDeviations <- function(filename) {
+#   
+#   df <- utils::read.csv(filename, stringsAsFactors = FALSE)
+#   
+#   df <- df[which(df$maxvelocity == 1),]
+#   
+#   for (target in unique(df$targetangle_deg)) {
+#     
+#     idx <- which(df$targetangle_deg == deg)
+#     
+#     df[idx,c('handx_cm','handy_cm')] <- rotateCoordinates(df[idx,c('handx_cm','handy_cm')], -target)
+#     
+#   }
+#   
+#   
+#   
+# }
+# 
+# # no-cursor data =====
+# 
+# getNoCursorReachDeviations <- function(groups='all', sessions=c('rotated','aligned'), at='endpoint') {
+#   
+#   # at:
+#   # - endpoint
+#   # - maxvel_screened (indicated in screening)
+#   # - maxvel_velprof (grabbed from velocity profile)
+#   # - perc33 (at 33 percent of home-target distance, can be other percentages)
+#   
+#   utils::data('files', package='handlocs')
+#   utils::data('urls', package='handlocs')
+#   
+#   if (groups[1] == 'all') {
+#     groups <- unique(urls$group)
+#   }
+#   
+#   # for each group there should now be:
+#   # - reach deviations as a matrix or data frame
+#   # with for one dimension:
+#   # - trial number
+#   # - rotation
+#   # - block
+#   # - condition: aligned, inclusive or exclusive
+#   # and the other dimension:
+#   # - participant
+#   
+#   # (if participants are columns)
+#   # can we have multiple indices with the other data?
+#   # or should they be in another file?
+#   # what is the easiest / least confusing to use?
+#   
+# }
+# 
 
 
 
