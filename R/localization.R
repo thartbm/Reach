@@ -115,7 +115,6 @@ getLocalizationSpline <- function(df, spar=0.99) {
 #' @param r Radius for the circleCorrect procedure (default: \code{1})
 #' @return Hand lcalization data frame extended with columns to be used for
 #' smooth spline fitting.
-#' @details 
 #' @export
 prepareSplineVariables <- function(df, CC=TRUE, handvar='hand', locvar='tap', unit='cm',r=1) {
   
