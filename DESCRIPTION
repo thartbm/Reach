@@ -12,7 +12,8 @@ Encoding: UTF-8
 RoxygenNote: 6.1.1
 Depends:
   R (>= 3.5),
-  osfr (>= 0.2.8)
+  osfr (>= 0.2.8),
+  optimx (>= 2020-4.2)
 Imports:
   stats,
   graphics,

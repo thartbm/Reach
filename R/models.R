@@ -175,6 +175,8 @@ twoRateFit <- function(schedule, reaches, gridpoints=6, gridfits=6, checkStabili
   # evaluate starting positions:
   MSE <- apply(searchgrid, FUN=twoRateMSE, MARGIN=c(1), schedule=schedule, reaches=reaches, checkStability=checkStability)
   
+  # USE OPTIMX !
+  
   #optimxInstalled <- require("optimx")
   # if (optimxInstalled) {
   #   optimFUN <- optimx
@@ -183,10 +185,7 @@ twoRateFit <- function(schedule, reaches, gridpoints=6, gridfits=6, checkStabili
   #   optimFUN <- optim
   #   method <- 'Nelder-Mead'
   # }
-  optimxInstalled <- FALSE
-  optimFUN <- optim
-  method <- 'Nelder-Mead'
-  
+
   
   # if (optimxInstalled) {
   #   # run optimx on the best starting positions:
@@ -234,9 +233,9 @@ twoRateFit <- function(schedule, reaches, gridpoints=6, gridfits=6, checkStabili
   allfits <- do.call("rbind",
                      apply( searchgrid[order(MSE)[1:gridfits],],
                             MARGIN=c(1),
-                            FUN=optimFUN,
+                            FUN=optimx::optimx,
                             fn=twoRateMSE,
-                            method=method,
+                            method='L-BFGS-B',
                             lower=c(0,0,0,0),
                             upper=c(1,1,1,1),
                             schedule=schedule,
@@ -245,12 +244,8 @@ twoRateFit <- function(schedule, reaches, gridpoints=6, gridfits=6, checkStabili
   
   
   # pick the best fit:
-  if (optimxInstalled) {
-    win <- allfits[order(allfits$value)[1],]
-  } else {
-    win <- allfits[order(unlist(data.frame(allfits)[,'value']))[1],]
-  }
-  
+  win <- allfits[order(allfits$value)[1],]
+
   return(unlist(win[1:4]))
   
 }
