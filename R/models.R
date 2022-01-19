@@ -243,7 +243,7 @@ twoRateFit <- function(schedule, reaches, gridpoints=6, gridfits=6, checkStabili
                             checkStability=checkStability) )
   
   
-  print(allfits)
+  #print(allfits)
   
   # pick the best fit:
   win <- allfits[order(allfits$value)[1],]
