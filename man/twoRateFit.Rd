@@ -4,8 +4,13 @@
 \alias{twoRateFit}
 \title{Fit the two-rate model to reach deviations.}
 \usage{
-twoRateFit(schedule, reaches, gridpoints = 6, gridfits = 6,
-  checkStability = FALSE)
+twoRateFit(
+  schedule,
+  reaches,
+  gridpoints = 6,
+  gridfits = 6,
+  checkStability = FALSE
+)
 }
 \arguments{
 \item{schedule}{A vector of length N with the perturbation schedule.}

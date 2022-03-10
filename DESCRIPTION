@@ -9,7 +9,7 @@ Maintainer: Marius 't Hart <thartbm@gmail.com>
 Description: This package downloads and analyses all data for a project on active and passive hand localization.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.2
 Depends:
   R (>= 4.0),
   osfr (>= 0.2.8),

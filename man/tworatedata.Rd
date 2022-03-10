@@ -4,7 +4,8 @@
 \name{tworatedata}
 \alias{tworatedata}
 \title{Rotation adaptation data for use with the two-rate model}
-\format{A data frame with 164 rows and 20 columns:
+\format{
+A data frame with 164 rows and 20 columns:
 \describe{
   \item{block}{blocks 1 through 4: aligned, rotated, reversed, error-clamped}
   \item{trial}{trial within the block}
@@ -26,7 +27,8 @@
   \item{p030}{reach deviations of participant 3 at 1/3 target distance}
   \item{p033}{reach deviations of participant 3 at 1/3 target distance}
   \item{p035}{reach deviations of participant 3 at 1/3 target distance}
-}}
+}
+}
 \usage{
 tworatedata
 }

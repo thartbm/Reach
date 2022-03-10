@@ -4,8 +4,14 @@
 \alias{downloadOSFdata}
 \title{Download data from OSF and unzip into folder structure in \code{data/} folder.}
 \usage{
-downloadOSFdata(repository, filelist, folder, overwrite = TRUE,
-  unzip = FALSE, removezips = FALSE)
+downloadOSFdata(
+  repository,
+  filelist,
+  folder,
+  overwrite = TRUE,
+  unzip = FALSE,
+  removezips = FALSE
+)
 }
 \arguments{
 \item{repository}{OSF repository to download from (string of 5 characters)}

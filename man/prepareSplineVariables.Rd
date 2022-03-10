@@ -4,8 +4,14 @@
 \alias{prepareSplineVariables}
 \title{Prepare data for smoothed spline fitting.}
 \usage{
-prepareSplineVariables(df, CC = TRUE, handvar = "hand",
-  locvar = "tap", unit = "cm", r = 1)
+prepareSplineVariables(
+  df,
+  CC = TRUE,
+  handvar = "hand",
+  locvar = "tap",
+  unit = "cm",
+  r = 1
+)
 }
 \arguments{
 \item{df}{Data frame with localization data, this contains at least the

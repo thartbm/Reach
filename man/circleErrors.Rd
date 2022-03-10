@@ -4,14 +4,14 @@
 \alias{circleErrors}
 \title{Get mean squared error between coordinates and a circle}
 \usage{
-circleErrors(par, X, Y, r)
+circleErrors(freepar, X, Y, setpar)
 }
 \arguments{
-\item{par}{Vector with xc and yc parameters: x and y of the circle's middle}
-
 \item{X}{Vector of X coordinates}
 
 \item{Y}{Vector of Y coordinates}
+
+\item{par}{Vector with xc and yc parameters: x and y of the circle's middle}
 
 \item{r}{The radius of the circle}
 }

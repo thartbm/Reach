@@ -4,9 +4,15 @@
 \alias{getReachAngleAt}
 \title{Angular deviation of a reach from target at a specific point.}
 \usage{
-getReachAngleAt(trialdf, location = "pr0.33333", posunit = "pix",
-  timeunit = "ms", device = "hand", holdvelocity = NA,
-  holdduration = NA)
+getReachAngleAt(
+  trialdf,
+  location = "pr0.33333",
+  posunit = "pix",
+  timeunit = "ms",
+  device = "hand",
+  holdvelocity = NA,
+  holdduration = NA
+)
 }
 \arguments{
 \item{trialdf}{Data frame representing the reach.}
