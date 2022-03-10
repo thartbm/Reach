@@ -6,6 +6,7 @@
 #' @param var Variable of coordinates (default: 'tap')
 #' @param unit Unit of the coordinates (default: 'cm')
 #' @param r Radius of the circle the coordinates should be on (default: 1).
+#' @param fitr (boolean) Should radius be fit? (default: FALSE)
 #' @return The data frame with corrected \code{tapx_cm} and \code{tapy_cm} 
 #' columns. The corrected localization responses fall closest to a circle with
 #' radius \code{r} (in \code{unit}) and origin (0,0). Only response with
@@ -14,7 +15,7 @@
 #' case \code{x} and \code{y}: \code{tapx_cm} and \code{tapy_cm} with default
 #' settings. These should be columns in the data frame (\code{df}).
 #' @export
-circleCorrect <- function(df, unit='cm', var='tap', r=1) {
+circleCorrect <- function(df, unit='cm', vrbl='tap', r=1, fitr=FALSE) {
   
   if ('selected' %in% names(df)) {
     idx <- which(df$selected == 1)
@@ -22,18 +23,51 @@ circleCorrect <- function(df, unit='cm', var='tap', r=1) {
     idx <- seq(1,dim(df)[1])
   }
   
-  tapx <- df[idx,sprintf('%sx_%s',var,unit)]
-  tapy <- df[idx,sprintf('%sy_%s',var,unit)]
+  tapx <- df[idx,sprintf('%sx_%s',vrbl,unit)]
+  tapy <- df[idx,sprintf('%sy_%s',vrbl,unit)]
   
-  control <- list('maxit'=10000, 'ndeps'=1e-9 )
-  par <- c('xc'=0,'yc'=0)
-  sol <- stats::optim(par=par, circleErrors, gr=NULL, tapx, tapy, r=r, control=control)
-  
+  sol <- circleFit(X=tapx,
+                   Y=tapy,
+                   r=r,
+                   fitr=fitr)
+
   # this also corrects the non-selected trials:
-  df$tapx_cm <- df$tapx_cm - sol$par[['xc']]
-  df$tapy_cm <- df$tapy_cm - sol$par[['yc']]
+  df[,sprintf('%sx_%s',vrbl,unit)] <- df[,sprintf('%sx_%s',vrbl,unit)] - sol$par[['xc']]
+  df[,sprintf('%sy_%s',vrbl,unit)] <- df[,sprintf('%sy_%s',vrbl,unit)] - sol$par[['yc']]
   
   return(df)
+  
+}
+
+#' @param X Vector of X coordinates
+#' @param Y Vector of Y coordinates
+#' @param r Radius of the circle the coordinates should be on (default: 1).
+#' @param fitr (boolean) Should radius be fit? (default: FALSE)
+circleFit <- function(X, Y, r=1, fitr=FALSE) {
+  
+  control <- list('maxit'=10000, 'ndeps'=1e-9 )
+  
+  freepar <- c('xc'=0,'yc'=0)
+  # we can set the starting values for the optimization to 0 
+  # because the data is be pretty close to zero...
+  # but that is not always true for other data sets!
+  if (fitr) {
+    freepar <- c(freepar, 'r'=r)
+    setpar <-  c()
+  } else {
+    setpar  <- c('r'=r)
+  }
+  
+  # do we want to use optimx here at some point?
+  sol <- stats::optim(freepar=freepar, 
+                      circleErrors, 
+                      gr=NULL, 
+                      X, 
+                      Y, 
+                      setpar=setpar, 
+                      control=control)
+  
+  return(sol)
   
 }
 
@@ -46,9 +80,11 @@ circleCorrect <- function(df, unit='cm', var='tap', r=1) {
 #' @return The mean squared error between the distances of \code{X} and 
 #' \code{Y} from the position in par and the radius \code{r}.
 #' @export
-circleErrors <- function(par,X,Y,r) {
+circleErrors <- function(freepar,X,Y,setpar) {
   
-  return(mean((sqrt((X-par[['xc']])^2+(Y-par[['yc']])^2)-r)^2))
+  par <- c(freepar, setpar)
+  
+  return(mean((sqrt((X-par[['xc']])^2+(Y-par[['yc']])^2)-par['r'])^2))
   
 }
 
