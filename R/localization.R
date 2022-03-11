@@ -61,7 +61,7 @@ circleFit <- function(X, Y, r=1, fitr=FALSE) {
   }
   
   # do we want to use optimx here at some point?
-  sol <- stats::optim(freepar=freepar, 
+  sol <- stats::optim(par=freepar, 
                       circleErrors, 
                       gr=NULL, 
                       X, 
@@ -166,8 +166,9 @@ prepareSplineVariables <- function(df, CC=TRUE, handvar='hand', locvar='tap', un
   if (CC) {
     df <- circleCorrect( df, 
                          unit=unit, 
-                         var=locvar, 
-                         r=r)
+                         vrbl=locvar, 
+                         r=r,
+                         fitr=TRUE)
   }
   
   # assemble hand/reach column names:
