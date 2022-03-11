@@ -11,11 +11,11 @@ circleCorrect(df, unit = "cm", vrbl = "tap", r = 1, fitr = FALSE)
 
 \item{unit}{Unit of the coordinates (default: 'cm')}
 
+\item{vrbl}{Variable of coordinates (default: 'tap')}
+
 \item{r}{Radius of the circle the coordinates should be on (default: 1).}
 
 \item{fitr}{(boolean) Should radius be fit? (default: FALSE)}
-
-\item{var}{Variable of coordinates (default: 'tap')}
 }
 \value{
 The data frame with corrected \code{tapx_cm} and \code{tapy_cm} 
@@ -27,7 +27,7 @@ radius \code{r} (in \code{unit}) and origin (0,0). Only response with
 Shift localization responses so they are centred on the origin
 }
 \details{
-The parameters \code{var} and \code{unit} are combined with a lower
+The parameters \code{vrbl} and \code{unit} are combined with a lower
 case \code{x} and \code{y}: \code{tapx_cm} and \code{tapy_cm} with default
 settings. These should be columns in the data frame (\code{df}).
 }

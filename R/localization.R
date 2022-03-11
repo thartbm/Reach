@@ -3,15 +3,15 @@
 #' Shift localization responses so they are centred on the origin
 #' 
 #' @param df Data frame with localization coordinates (X,Y).
-#' @param var Variable of coordinates (default: 'tap')
 #' @param unit Unit of the coordinates (default: 'cm')
+#' @param vrbl Variable of coordinates (default: 'tap')
 #' @param r Radius of the circle the coordinates should be on (default: 1).
 #' @param fitr (boolean) Should radius be fit? (default: FALSE)
 #' @return The data frame with corrected \code{tapx_cm} and \code{tapy_cm} 
 #' columns. The corrected localization responses fall closest to a circle with
 #' radius \code{r} (in \code{unit}) and origin (0,0). Only response with
 #' \code{df$selected == 1} are used for this correction.
-#' @details The parameters \code{var} and \code{unit} are combined with a lower
+#' @details The parameters \code{vrbl} and \code{unit} are combined with a lower
 #' case \code{x} and \code{y}: \code{tapx_cm} and \code{tapy_cm} with default
 #' settings. These should be columns in the data frame (\code{df}).
 #' @export
@@ -39,6 +39,8 @@ circleCorrect <- function(df, unit='cm', vrbl='tap', r=1, fitr=FALSE) {
   
 }
 
+#' Fit a circle to data
+#'
 #' @param X Vector of X coordinates
 #' @param Y Vector of Y coordinates
 #' @param r Radius of the circle the coordinates should be on (default: 1).
@@ -73,14 +75,15 @@ circleFit <- function(X, Y, r=1, fitr=FALSE) {
 
 #' Get mean squared error between coordinates and a circle
 #' 
-#' @param par Vector with xc and yc parameters: x and y of the circle's middle
+#' @param freepar Vector with xc and yc parameters: x and y of the circle's middle.
+#' Optionally also includes \code{r}: the radius of the circle.
 #' @param X Vector of X coordinates
 #' @param Y Vector of Y coordinates
-#' @param r The radius of the circle
+#' @param setpar Vector that can have a fixed radius \code{r}, or can be empty.
 #' @return The mean squared error between the distances of \code{X} and 
 #' \code{Y} from the position in par and the radius \code{r}.
 #' @export
-circleErrors <- function(freepar,X,Y,setpar) {
+circleErrors <- function(freepar,X,Y,setpar=c()) {
   
   par <- c(freepar, setpar)
   
