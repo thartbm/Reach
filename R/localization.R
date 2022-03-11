@@ -30,7 +30,7 @@ circleCorrect <- function(df, unit='cm', vrbl='tap', r=1, fitr=FALSE) {
                    Y=tapy,
                    r=r,
                    fitr=fitr)
-
+  
   # this also corrects the non-selected trials:
   df[,sprintf('%sx_%s',vrbl,unit)] <- df[,sprintf('%sx_%s',vrbl,unit)] - sol$par[['xc']]
   df[,sprintf('%sy_%s',vrbl,unit)] <- df[,sprintf('%sy_%s',vrbl,unit)] - sol$par[['yc']]
@@ -45,6 +45,7 @@ circleCorrect <- function(df, unit='cm', vrbl='tap', r=1, fitr=FALSE) {
 #' @param Y Vector of Y coordinates
 #' @param r Radius of the circle the coordinates should be on (default: 1).
 #' @param fitr (boolean) Should radius be fit? (default: FALSE)
+#' @export
 circleFit <- function(X, Y, r=1, fitr=FALSE) {
   
   control <- list('maxit'=10000, 'ndeps'=1e-9 )
