@@ -28,3 +28,21 @@
 #'   \item{p035}{reach deviations of participant 3 at 1/3 target distance}
 #' }
 "tworatedata"
+
+#' Localization data points to illustrate circle-fitting. Twenty-five
+#' localization points each, from one well-aligned and one not so well-aligned
+#' participant.
+#' 
+#' load with: data(localization)
+#' 
+#' @format Data frame with 50 rows and 6 columns:
+#' \describe{
+#'   \item{targetangle_deg}{angle of actual hand position relative to home}
+#'   \item{handx_cm}{hand position x-coordinate in centimeters}
+#'   \item{handy_cm}{hand position y-coordinate in centimeters}
+#'   \item{tapx_cm}{localization x-coordinate in centimeters}
+#'   \item{tapy_cm}{localization y-coordinate in centimeters}
+#'   \item{participant}{participant ID, either 'a', or 'b'}
+#' }
+"localization"
+
