@@ -299,6 +299,7 @@ asymptoticDecayMSE <- function(par, schedule, signal) {
 #' ?
 #' @examples
 #' # write example!
+#' @import optimx
 #' @export
 asymptoticDecayFit <- function(schedule, signal, gridpoints=11, gridfits=10) {
 

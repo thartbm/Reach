@@ -1,6 +1,6 @@
 Package: Reach
 Type: Package
-Title: Download and analyse data on hand localization signals
+Title: Download and analyse 2D reaching and hand localization data
 Version: 2022.03.10
 Authors@R: c(person("B. Marius", "'t Hart", email = "thartbm@gmail.com",
                   role = c("aut", "cre")),

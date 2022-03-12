@@ -9,6 +9,7 @@
 #' @param unzip (Boolean) Whether or not to unzip zip files.
 #' @param removezips (Boolean) Whether or not to remove zip files after unzipping.
 #' @return empty
+#' @import osfr
 #' @export
 downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE) {
   
