@@ -30,7 +30,7 @@ A data frame with 164 rows and 20 columns:
 }
 }
 \usage{
-tworatedata
+data(tworatedata)
 }
 \description{
 A dataset with a perturbation schedule and the reach direction errors of a group

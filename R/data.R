@@ -27,6 +27,7 @@
 #'   \item{p033}{reach deviations of participant 3 at 1/3 target distance}
 #'   \item{p035}{reach deviations of participant 3 at 1/3 target distance}
 #' }
+#' @usage data(tworatedata)
 "tworatedata"
 
 #' Localization data points to illustrate circle-fitting. Twenty-five
@@ -44,5 +45,6 @@
 #'   \item{tapy_cm}{localization y-coordinate in centimeters}
 #'   \item{participant}{participant ID, either 'a', or 'b'}
 #' }
+#' @usage data(localization)
 "localization"
 

@@ -18,7 +18,7 @@ Data frame with 50 rows and 6 columns:
 }
 }
 \usage{
-localization
+data(localization)
 }
 \description{
 load with: data(localization)
