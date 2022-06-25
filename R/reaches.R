@@ -124,7 +124,7 @@ rotateCoordinates <- function(df,angle,origin=c(0,0)) {
 
 #' @title Angular deviation of a reach from target at a specific point. 
 #' @param trialdf Data frame representing the reach.
-#' @param location String specifying which location to use.
+#' @param location String specifying which location to use (see details).
 #' @param posunit String with the unit of x,y coordinates (pix, cm, ...)
 #' @param timeunit String with the unit of time (s, ms, ...)
 #' @param device String saying what position to use (hand, mouse, robot...)
@@ -141,7 +141,17 @@ rotateCoordinates <- function(df,angle,origin=c(0,0)) {
 #' @description
 #' ?
 #' @details
-#' ?
+#' The `location` argument specifies which point along the trajectory to use 
+#' for a reach deviation (in degrees). It canhgave several (string) values:
+#' 
+#' - 'maxvel', requires a column 'maxvel' in the data frame with a single
+#' value of 1 (and 0 otherwise). The coordinates at this sample are used.
+#' - 'endpoint', uses the last sample of the trajectory, useful for
+#' no-cursor trials with the return trajectory removed
+#' - 'prX', uses the first sample at or beyond a proportion of distance from
+#' the target, given by X (a float), the default setting: 'pr0.33333'
+#' 
+#' There are other options, but they are not consolidated yet.
 #' @examples
 #' ?
 #' @export

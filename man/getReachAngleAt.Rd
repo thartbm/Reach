@@ -17,7 +17,7 @@ getReachAngleAt(
 \arguments{
 \item{trialdf}{Data frame representing the reach.}
 
-\item{location}{String specifying which location to use.}
+\item{location}{String specifying which location to use (see details).}
 
 \item{posunit}{String with the unit of x,y coordinates (pix, cm, ...)}
 
@@ -43,7 +43,17 @@ multiple others, and then do further processing on that.
 ?
 }
 \details{
-?
+The `location` argument specifies which point along the trajectory to use 
+for a reach deviation (in degrees). It canhgave several (string) values:
+
+- 'maxvel', requires a column 'maxvel' in the data frame with a single
+value of 1 (and 0 otherwise). The coordinates at this sample are used.
+- 'endpoint', uses the last sample of the trajectory, useful for
+no-cursor trials with the return trajectory removed
+- 'prX', uses the first sample at or beyond a proportion of distance from
+the target, given by X (a float), the default setting: 'pr0.33333'
+
+There are other options, but they are not consolidated yet.
 }
 \examples{
 ?

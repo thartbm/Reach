@@ -93,7 +93,6 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALS
 #' @param folder folder in the current working directory to store files in
 #' @param removezips (Boolean) remove zip files after unzipping?
 #' @return empty
-#' @export
 unzipZips <- function(filelist,folder,removezips=FALSE) {
   
   # loop through entries in filelist
@@ -136,15 +135,11 @@ unzipZips <- function(filelist,folder,removezips=FALSE) {
 #' @return empty
 #' @examples
 #' #dataFilecheck(groups='all', sections=c('aligned'), verbose=TRUE)
-#' @export
 dataFilecheck <- function(groups='all', sections='sections', verbose=FALSE) {
   
   utils::data('files', package='handlocs')
   utils::data('urls', package='handlocs')
   
-  #files <- handlocs:::files
-  #urls <- handlocs:::urls
-
   if (groups[1] != 'all') {
     urls <- urls[which(urls$group %in% groups),]
   }
