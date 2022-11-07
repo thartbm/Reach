@@ -281,7 +281,7 @@ getReachAngleAt <- function(trialdf, location='pr0.33333', posunit='pix', timeun
     
     dist <- sqrt(x^2 + y^2)
     
-    VT <- getSplinedVelocity(x, y, t, spar=0.20)
+    VT <- Reach::getSplinedVelocity(x, y, t, spar=0.20)
     v <- c(0, 0, VT$velocity)
     
     peaks <- which(diff(sign(diff(v))) == -2 & dist > distance)
@@ -311,5 +311,65 @@ getReachAngleAt <- function(trialdf, location='pr0.33333', posunit='pix', timeun
   reachangle[1,5] <- t[rown]
   
   return(reachangle)
+  
+}
+
+
+#' @title Get smooth splined coordinate interpolation over time
+#' @param x X-coordinates of a trajectory
+#' @param y Y-coordinates of a trajectory
+#' @param t Timestamps of the X and Y coordinates
+#' @param length.out number of splined points to return
+#' @param spar Smoothing parameter for the spline, default: 0.01 (0.00-1.00)
+#' @return This function returns a data frame with smooth spline interpolated
+#' trajectory given by x, y and t.
+#' @description 
+#' Returns a 2D trajectory smoothed by splining.
+#' @details 
+#' 
+#' @examples
+#' 
+#' @export
+getSplinedTrajectory <- function(x, y, t, length.out=length(t), spar=0.01) {
+  
+  spl.Xt <- stats::smooth.spline(t, x, spar=spar, keep.data=F) 
+  spl.Yt <- stats::smooth.spline(t, y, spar=spar, keep.data=F) 
+  
+  tt <- seq(min(t), max(t), length.out = length.out)
+  
+  XX <- stats::predict(spl.Xt, tt)$y
+  YY <- stats::predict(spl.Yt, tt)$y
+  
+  return(data.frame('x'=XX, 'y'=YY, 't'=tt))
+  
+}
+
+#' @title Get velocity profile after spline interpolation
+#' @param x X-coordinates of a trajectory
+#' @param y Y-coordinates of a trajectory
+#' @param t Timestamps of the X and Y coordinates
+#' @param spar Smoothing parameter for the spline, default: 0.01 (0.00-1.00)
+#' @return This function returns a data frame with spline interpolated velocity
+#' and time for the trajectory given by x, y and t. The first velocity sample
+#' will always be zero.
+#' @description 
+#' Returns velocity based on spline-smoothed trajectory.
+#' @details 
+#' 
+#' @examples
+#' 
+#' @export
+getSplinedVelocity <- function(x, y, t, spar=0.01) {
+  
+  # spline interpolate the X and Y coordinates over time:
+  # (separately... no multi-dimensional splining in base R)
+  ST <- Reach::getSplinedTrajectory(x, y, t, length.out=length(t), spar=spar)
+  
+  # velocity on spline interpolated data
+  V <- sqrt(diff(ST$x)^2 + diff(ST$y)^2) / diff(ST$t)
+  # add velocity = 0 for first sample:
+  V <- c(0, V)
+  
+  return(data.frame('velocity'=V, 'time'=ST$t))
   
 }
