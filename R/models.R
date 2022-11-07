@@ -143,7 +143,10 @@ twoRateMSE <- function(par, schedule, reaches, checkStability=FALSE) {
 #' 
 #' # first we baseline it, and get a median for every trial:
 #' baseline <- function(reachvector,blidx) reachvector - mean(reachvector[blidx], na.rm=TRUE)
-#' tworatedata[,4:ncol(tworatedata)] <- apply(tworatedata[,4:ncol(tworatedata)], FUN=baseline, MARGIN=c(2), blidx=c(17:32))
+#' tworatedata[,4:ncol(tworatedata)] <- apply(tworatedata[,4:ncol(tworatedata)], 
+#'                                            FUN=baseline, 
+#'                                            MARGIN=c(2), 
+#'                                            blidx=c(17:32))
 #' reaches <- apply(tworatedata[4:ncol(tworatedata)], FUN=median, MARGIN=c(1), na.rm=TRUE)
 #' 
 #' # and we extract the schedule:
@@ -154,7 +157,11 @@ twoRateMSE <- function(par, schedule, reaches, checkStability=FALSE) {
 #' 
 #' # and plot that:
 #' model <- twoRateModel(par=par, schedule=schedule)
-#' plot(reaches,type='l',col='#333333',xlab='trial',ylab='reach deviation [deg]',xlim=c(0,165),ylim=c(-35,35),bty='n',ax=FALSE)
+#' plot(reaches,
+#'      type='l', col='#333333',
+#'      xlab='trial', ylab='reach deviation [deg]',
+#'      xlim=c(0,165), ylim=c(-35,35),
+#'      bty='n', ax=FALSE)
 #' lines(c(1,33,33,133,133,145,145),c(0,0,30,30,-30,-30,0),col='#AAAAAA')
 #' lines(c(145,164),c(0,0),col='#AAAAAA',lty=2)
 #' lines(model$slow,col='blue')
