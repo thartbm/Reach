@@ -93,6 +93,7 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALS
 #' @param folder folder in the current working directory to store files in
 #' @param removezips (Boolean) remove zip files after unzipping?
 #' @return empty
+#' @export
 unzipZips <- function(filelist,folder,removezips=FALSE) {
   
   # loop through entries in filelist
