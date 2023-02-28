@@ -341,3 +341,131 @@ asymptoticDecayFit <- function(schedule, signal, gridpoints=11, gridfits=10) {
   return(unlist(win[1:2]))
   
 }
+
+
+# Exponential Function -----
+
+# fit a single exponential to learning data, with two parameters:
+# - a learning rate
+# - an asymptote (for incomplete learning)
+
+# will replace asymptotic decay, but should do the same thing
+# except that's it's slightly closer to an actual exponential
+# and uses it behind the scenes, so that:
+# it should run faster
+# people can use the output for maths
+
+
+#' @title Run an exponential function given parameters and a reach
+#' deviation schedule. Errors decay exponentially.
+#' @param par A named vector with the model parameter (see details).
+#' @param timepoints An integer indicating the number of trials (N), or a vector
+#' with N trial numbers (these can have missing values or be fractions). If an
+#' integer, the timepoints at which the exponential will be evaluated is:
+#' 0, 1 ... N-2, N-1
+#' @return A data frame with two columns: `timepoint` and `output`, and N rows,
+#' so that each row has the output of the modeled process on each trial.
+#' @description This function is part of a set of functions to fit and
+#' evaluate an exponential decay model with asymptote.
+#' @details The `par` argument is a named numeric vector that should have the
+#' following element:
+#' - lambda: learning rate
+#' - N0: asymptote
+#' @examples
+#' write example!
+#' @export
+exponentialModel <- function(par, timepoints) {
+  
+  if (length(timepoints) == 1) {
+    timepoints <- c(0:(timepoints-1))
+  }
+  
+  output = par['N0'] - (par['N0'] * exp(-1 * fit['lambda'] * timepoints))
+  
+  return(data.frame(trial=timepoints,
+                    output=output))
+  
+}
+
+#' @title Get the MSE between an exponential and a series of reach deviations.
+#' @param par A named numeric vector with the model parameters (see
+#' exponentialModel).
+#' @param signal A numeric vector of length N with reach deviations matching
+#' the perturbation schedule.
+#' @param timepoints Either an integer with the number of trials (N) or a vector
+#' with N trial numbers (this can have missing values or fractions). The 
+#' exponential will be evaluated at those timepoints.
+#' @return A float: the mean squared error between the total model output and
+#' the reach deviations.
+#' @description This function is part of a set of functions to fit and
+#' evaluate an exponential function to describe a series of reach deviations.
+#' @details The `par` argument is a named numeric vector that should have the
+#' following element:
+#' - lambda: the learning rate
+#' - N0: the asymptote
+#' @examples
+#' ?
+#' @export
+exponentialMSE <- function(par, signal, timepoints=NULL) {
+  
+  MSE <- mean((exponentialModel(par, timepoints)$output - signal)^2, na.rm=TRUE)
+  
+  return( MSE )
+  
+}
+
+#' @title Fit an asymptotic decay model to reach deviations.
+#' @param signal A vector of length N with reach deviation data. These should
+#' start around 0 and go up (ideally they are baselined).
+#' @param timepoints NULL or a vector of length N with the timepoints at which
+#' to evaluate the exponential. If NULL, the N values in `signal` are placed
+#' at: 0, 1, ... N-2, N-1.
+#' @param gridpoints Number of values for rate of change and asymptote, that
+#' are tested in a grid.
+#' @param gridfits Number of best results from gridsearch that are used for
+#' optimizing a fit.
+#' @return A named numeric vector with the optimal parameter that fits a simple
+#' rate model to the data as best as possible, with these elements:
+#' - lambda: the rate of change in the range [0,1]
+#' - N0: the asymptote in the unit the reach deviations are in
+#' @description This function is part of a set of functions to fit and
+#' evaluate a simple exponential function to reach deviations.
+#' @details
+#' ?
+#' @examples
+#' # write example!
+#' @import optimx
+#' @export
+exponentialFit <- function(signal, timepoints=length(signal), gridpoints=11, gridfits=10) {
+  
+  # set the search grid:
+  parvals <- seq(1/gridpoints/2,1-(1/gridpoints/2),1/gridpoints)
+  
+  maxAsymptote <- 2*max(abs(signal), na.rm=TRUE)
+  
+  # define the search grid:
+  searchgrid <- expand.grid('lambda' = parvals,
+                            'N0'     = parvals * maxAsymptote)
+  
+  # evaluate starting positions:
+  MSE <- apply(searchgrid, FUN=exponentialMSE, MARGIN=c(1), signal=signal, timepoints=timepoints)
+  
+  # run optimx on the best starting positions:
+  allfits <- do.call("rbind",
+                     apply( data.frame(searchgrid[order(MSE)[1:gridfits],]),
+                            MARGIN=c(1),
+                            FUN=optimx::optimx,
+                            fn=exponentialMSE,
+                            method='L-BFGS-B',
+                            lower=c(0,0),
+                            upper=c(1,maxAsymptote),
+                            timepoints=timepoints,
+                            signal=signal ) )
+  
+  # pick the best fit:
+  win <- allfits[order(allfits$value)[1],]
+  
+  # return the best parameters:
+  return(unlist(win[1:2]))
+  
+}
