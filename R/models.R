@@ -380,7 +380,7 @@ exponentialModel <- function(par, timepoints) {
     timepoints <- c(0:(timepoints-1))
   }
   
-  output = par['N0'] - (par['N0']^(-1 * fit['lambda'] * timepoints))
+  output = par['N0'] - (par['N0']^(-1 * par['lambda'] * timepoints))
   
   return(data.frame(trial=timepoints,
                     output=output))
