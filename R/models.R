@@ -372,7 +372,7 @@ asymptoticDecayFit <- function(schedule, signal, gridpoints=11, gridfits=10) {
 #' - lambda: learning rate
 #' - N0: asymptote
 #' @examples
-#' write example!
+#' # write example!
 #' @export
 exponentialModel <- function(par, timepoints) {
   
@@ -404,7 +404,7 @@ exponentialModel <- function(par, timepoints) {
 #' - lambda: the learning rate
 #' - N0: the asymptote
 #' @examples
-#' ?
+#' # write example?
 #' @export
 exponentialMSE <- function(par, signal, timepoints=NULL) {
   
