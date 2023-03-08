@@ -8,7 +8,8 @@ exponentialMSE(
   par,
   signal,
   timepoints = c(0:(length(signal) - 1)),
-  mode = "learning"
+  mode = "learning",
+  setN0 = NULL
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ with N trial numbers (this can have missing values or fractions). The
 exponential will be evaluated at those timepoints.}
 
 \item{mode}{String: "learning" or "washout", sets the function's direction.}
+
+\item{setN0}{NULL or number, if the asymptote is known, it can be set here.}
 }
 \value{
 A float: the mean squared error between the total model output and

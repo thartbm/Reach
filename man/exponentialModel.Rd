@@ -5,7 +5,7 @@
 \title{Run an exponential function given parameters and a reach
 deviation schedule. Errors decay exponentially.}
 \usage{
-exponentialModel(par, timepoints, mode = "learning")
+exponentialModel(par, timepoints, mode = "learning", setN0 = NULL)
 }
 \arguments{
 \item{par}{A named vector with the model parameter (see details).}
@@ -16,6 +16,8 @@ integer, the timepoints at which the exponential will be evaluated is:
 0, 1 ... N-2, N-1}
 
 \item{mode}{String: "learning" or "washout", sets the function's direction.}
+
+\item{setN0}{NULL or number, if the asymptote is known, it can be set here.}
 }
 \value{
 A data frame with two columns: `timepoint` and `output`, and N rows,

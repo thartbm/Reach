@@ -9,7 +9,8 @@ exponentialFit(
   timepoints = length(signal),
   mode = "learning",
   gridpoints = 11,
-  gridfits = 10
+  gridfits = 10,
+  setN0 = NULL
 )
 }
 \arguments{
@@ -30,6 +31,8 @@ are tested in a grid.}
 
 \item{gridfits}{Number of best results from gridsearch that are used for
 optimizing a fit.}
+
+\item{setN0}{NULL or number, if the asymptote is known, it can be set here.}
 }
 \value{
 A named numeric vector with the optimal parameter that fits a simple
