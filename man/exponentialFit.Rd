@@ -7,6 +7,7 @@
 exponentialFit(
   signal,
   timepoints = length(signal),
+  mode = "learning",
   gridpoints = 11,
   gridfits = 10
 )
@@ -19,6 +20,11 @@ start around 0 and go up (ideally they are baselined).}
 to evaluate the exponential. If NULL, the N values in `signal` are placed
 at: 0, 1, ... N-2, N-1.}
 
+\item{mode}{A string, one of "learning" or "washout". For "learning" the
+signal starts at 0 and increases with exponentially decaying errors, going
+towards asymptote ("N0"), and for "washout" it starts at "N0" and approaches
+0 over time.}
+
 \item{gridpoints}{Number of values for rate of change and asymptote, that
 are tested in a grid.}
 
@@ -29,7 +35,7 @@ optimizing a fit.}
 A named numeric vector with the optimal parameter that fits a simple
 rate model to the data as best as possible, with these elements:
 - lambda: the rate of change in the range [0,1]
-- N0: the asymptote in the unit the reach deviations are in
+- N0: the asymptote (or starting value) in the unit of the signal
 }
 \description{
 This function is part of a set of functions to fit and

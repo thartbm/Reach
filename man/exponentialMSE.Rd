@@ -4,7 +4,12 @@
 \alias{exponentialMSE}
 \title{Get the MSE between an exponential and a series of reach deviations.}
 \usage{
-exponentialMSE(par, signal, timepoints = NULL)
+exponentialMSE(
+  par,
+  signal,
+  timepoints = c(0:(length(signal) - 1)),
+  mode = "learning"
+)
 }
 \arguments{
 \item{par}{A named numeric vector with the model parameters (see
@@ -16,6 +21,8 @@ the perturbation schedule.}
 \item{timepoints}{Either an integer with the number of trials (N) or a vector
 with N trial numbers (this can have missing values or fractions). The 
 exponential will be evaluated at those timepoints.}
+
+\item{mode}{String: "learning" or "washout", sets the function's direction.}
 }
 \value{
 A float: the mean squared error between the total model output and
