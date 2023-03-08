@@ -364,6 +364,7 @@ asymptoticDecayFit <- function(schedule, signal, gridpoints=11, gridfits=10) {
 #' integer, the timepoints at which the exponential will be evaluated is:
 #' 0, 1 ... N-2, N-1
 #' @param mode String: "learning" or "washout", sets the function's direction.
+#' @param setN0 NULL or number, if the asymptote is known, it can be set here.
 #' @return A data frame with two columns: `timepoint` and `output`, and N rows,
 #' so that each row has the output of the modeled process on each trial.
 #' @description This function is part of a set of functions to fit and
@@ -375,19 +376,21 @@ asymptoticDecayFit <- function(schedule, signal, gridpoints=11, gridfits=10) {
 #' @examples
 #' # write example!
 #' @export
-exponentialModel <- function(par, timepoints, mode='learning') {
+exponentialModel <- function(par, timepoints, mode='learning', setN0=NULL) {
   
   if (length(timepoints) == 1) {
     timepoints <- c(0:(timepoints-1))
   }
   
-  e <- exp(1)
-  
+  if (is.numeric(setN0)) {
+    par['N0'] = setN0
+  }
+
   if (mode == 'learning') {
     output = par['N0'] - ( par['N0'] * (1-par['lambda'])^timepoints )
   }
   if (mode == 'washout') {
-    output = par['N0'] * (1-par['lambda'])^timepoints
+    output = par['N0'] * (par['lambda'])^timepoints
   }
   
   return(data.frame(trial=timepoints,
@@ -406,6 +409,7 @@ exponentialModel <- function(par, timepoints, mode='learning') {
 #' @param mode String: "learning" or "washout", sets the function's direction.
 #' @return A float: the mean squared error between the total model output and
 #' the reach deviations.
+#' @param setN0 NULL or number, if the asymptote is known, it can be set here.
 #' @description This function is part of a set of functions to fit and
 #' evaluate an exponential function to describe a series of reach deviations.
 #' @details The `par` argument is a named numeric vector that should have the
@@ -415,9 +419,9 @@ exponentialModel <- function(par, timepoints, mode='learning') {
 #' @examples
 #' # write example?
 #' @export
-exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode='learning') {
+exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode='learning', setN0=NULL) {
   
-  MSE <- mean((exponentialModel(par, timepoints, mode=mode)$output - signal)^2, na.rm=TRUE)
+  MSE <- mean((exponentialModel(par, timepoints, mode=mode, setN0=setN0)$output - signal)^2, na.rm=TRUE)
   
   return( MSE )
   
@@ -437,6 +441,7 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' are tested in a grid.
 #' @param gridfits Number of best results from gridsearch that are used for
 #' optimizing a fit.
+#' @param setN0 NULL or number, if the asymptote is known, it can be set here.
 #' @return A named numeric vector with the optimal parameter that fits a simple
 #' rate model to the data as best as possible, with these elements:
 #' - lambda: the rate of change in the range [0,1]
@@ -449,7 +454,7 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' # write example!
 #' @import optimx
 #' @export
-exponentialFit <- function(signal, timepoints=length(signal), mode='learning', gridpoints=11, gridfits=10) {
+exponentialFit <- function(signal, timepoints=length(signal), mode='learning', gridpoints=11, gridfits=10, setN0=NULL) {
   
   # set the search grid:
   parvals <- seq(1/gridpoints/2,1-(1/gridpoints/2),1/gridpoints)
@@ -457,11 +462,19 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
   asymptoteRange <- c(-1,2)*max(abs(signal), na.rm=TRUE)
   
   # define the search grid:
-  searchgrid <- expand.grid('lambda' = parvals,
-                            'N0'     = parvals * diff(asymptoteRange) + asymptoteRange[1] )
-  
+  if (is.numeric(setN0)) {
+    searchgrid <- expand.grid('lambda' = parvals)
+    lo <- c(0)
+    hi <- c(1)
+  }
+  if (is.null(setN0)) {
+    searchgrid <- expand.grid('lambda' = parvals,
+                              'N0'     = parvals * diff(asymptoteRange) + asymptoteRange[1] )
+    lo <- c(0,asymptoteRange[1])
+    hi <- c(1,asymptoteRange[2])
+  }
   # evaluate starting positions:
-  MSE <- apply(searchgrid, FUN=exponentialMSE, MARGIN=c(1), signal=signal, timepoints=timepoints, mode=mode)
+  MSE <- apply(searchgrid, FUN=exponentialMSE, MARGIN=c(1), signal=signal, timepoints=timepoints, mode=mode, setN0=setN0)
   
   # run optimx on the best starting positions:
   allfits <- do.call("rbind",
@@ -470,16 +483,25 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
                             FUN=optimx::optimx,
                             fn=exponentialMSE,
                             method     = 'L-BFGS-B',
-                            lower      = c(0,asymptoteRange[1]),
-                            upper      = c(1,asymptoteRange[2]),
+                            lower      = lo,
+                            upper      = hi,
                             timepoints = timepoints,
                             signal     = signal,
-                            mode       = mode ) )
+                            mode       = mode,
+                            setN0      = setN0 ) )
   
   # pick the best fit:
   win <- allfits[order(allfits$value)[1],]
   
+  if (is.null(setN0)) {
+    winpar <- unlist(win[1:2])
+  } else {
+    winpar <- c( 'lambda' = unlist(win[1]), 
+                 'N0'     = setN0)
+    names(winpar) <- c('lambda', 'N0')
+  }
+  
   # return the best parameters:
-  return(unlist(win[1:2]))
+  return(winpar)
   
 }
