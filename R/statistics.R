@@ -117,3 +117,35 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
   }
   
 }
+
+#' @title Orthogonal Distance Regression.
+#' @param X A predictor matrix (variables in columns, N observations in rows).
+#' @param y Column vector (N rows) with dependent variable.
+#' @return A list with: `beta` (row vector of weights) and `intercept`. 
+#' @description Perform orthogonal distance regression with multiple predictors.
+#' @details This function uses PCA to perform orthogonal distance regression
+#' or "total least squares regression") on y based on one or more predictors
+#' in X.
+#' Code taken from https://stats.stackexchange.com/questions/13152/how-to-perform-orthogonal-regression-total-least-squares-via-pca
+#' @examples
+#' # we'll predict petal width from other iris virginica properties:
+#' y <- iris$Petal.Width[101:150]
+#' X <- as.matrix(iris[101:150,1:3])
+#' pw.odr <- ODR(X,y)
+#' 
+#' # let's have a look at how well that predicts petal width:
+#' y_hat <- (X %*% pw.odr$beta) + pw.odr$intercept
+#' plot(y,y_hat,asp=1,xlim=c(0,3),ylim=c(0,3))
+#' @export
+ODR <- function(X,y) {
+  
+  v <- stats::prcomp(cbind(X,matrix(y)))$rotation
+  # v <- eigen(cov(cbind(x, y)))$vectors  # this supposedly faster for larger data sets
+  beta <- -v[-ncol(v),ncol(v)] / v[ncol(v),ncol(v)]
+  
+  intercept <- mean(y) - (colMeans(X) %*% beta)
+  
+  return(list('beta'=beta,
+              'intercept'=intercept[1,1]))
+  
+}
