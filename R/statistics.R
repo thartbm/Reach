@@ -118,34 +118,81 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
   
 }
 
+# #' @title Orthogonal Distance Regression.
+# #' @param X A predictor matrix (variables in columns, N observations in rows).
+# #' @param y Column vector (N rows) with dependent variable.
+# #' @return A list with: `beta` (row vector of weights) and `intercept`. 
+# #' @description Perform orthogonal distance regression with multiple predictors.
+# #' @details This function uses PCA to perform orthogonal distance regression
+# #' or "total least squares regression") on y based on one or more predictors
+# #' in X.
+# #' Code taken from https://stats.stackexchange.com/questions/13152/how-to-perform-orthogonal-regression-total-least-squares-via-pca
+# #' @examples
+# #' # we'll predict petal width from other iris virginica properties:
+# #' y <- iris$Petal.Width[101:150]
+# #' X <- as.matrix(iris[101:150,1:3])
+# #' pw.odr <- ODR(X,y)
+# #' 
+# #' # let's have a look at how well that predicts petal width:
+# #' y_hat <- (X %*% pw.odr$beta) + pw.odr$intercept
+# #' plot(y,y_hat,asp=1,xlim=c(0,3),ylim=c(0,3))
+# #' @export
+# ODR <- function(X,y) {
+#   
+#   v <- stats::prcomp(cbind(X,matrix(y)))$rotation
+#   # v <- eigen(cov(cbind(x, y)))$vectors  # this supposedly faster for larger data sets
+#   
+#   # get coefficients and slope:
+#   coeff <- -v[-ncol(v),ncol(v)] / v[ncol(v),ncol(v)]
+#   intercept <- (mean(y) - (colMeans(X) %*% beta))[1,1]
+#   
+#   # get residuals:
+#   y_hat <- cbind(X, 1) %*% c(coeff, intercept)
+#   res   <- y - y_hat
+#   
+#   return(list('coeff'=coeff,
+#               'intercept'=intercept,
+#               'res'=res))
+#   
+# }
+
+# 
+
 #' @title Orthogonal Distance Regression.
-#' @param X A predictor matrix (variables in columns, N observations in rows).
-#' @param y Column vector (N rows) with dependent variable.
-#' @return A list with: `beta` (row vector of weights) and `intercept`. 
+#' @param x A predictor matrix (variables in columns, N observations in rows).
+#' @param y Column vector (N rows) with 'dependent' variable.
+#' @return A list with: `coeff` (coefficients), `yfit` (fitted values), `err` (errors),
+#' `resd` (residuals), `ssq` (sum of squares) and `normal` (normal).
 #' @description Perform orthogonal distance regression with multiple predictors.
-#' @details This function uses PCA to perform orthogonal distance regression
-#' or "total least squares regression") on y based on one or more predictors
-#' in X.
-#' Code taken from https://stats.stackexchange.com/questions/13152/how-to-perform-orthogonal-regression-total-least-squares-via-pca
+#' @details 
+#' This function is copied from  the `pracma` package by Hans W. Borchers.
 #' @examples
-#' # we'll predict petal width from other iris virginica properties:
-#' y <- iris$Petal.Width[101:150]
-#' X <- as.matrix(iris[101:150,1:3])
-#' pw.odr <- ODR(X,y)
 #' 
-#' # let's have a look at how well that predicts petal width:
-#' y_hat <- (X %*% pw.odr$beta) + pw.odr$intercept
-#' plot(y,y_hat,asp=1,xlim=c(0,3),ylim=c(0,3))
 #' @export
-ODR <- function(X,y) {
+odregress <- function(x, y) {
+  stopifnot(is.numeric(x), is.numeric(y))
+
+  Z <- cbind(x, y)
+  n <- nrow(Z)      # no. of data points
+  m <- ncol(Z) - 1  # no. of independent variables
   
-  v <- stats::prcomp(cbind(X,matrix(y)))$rotation
-  # v <- eigen(cov(cbind(x, y)))$vectors  # this supposedly faster for larger data sets
-  beta <- -v[-ncol(v),ncol(v)] / v[ncol(v),ncol(v)]
+  meanZ <- repmat(apply(Z, 2, mean), n, 1)
+  svdZ <- svd(Z - meanZ)
+  V <- svdZ$v
   
-  intercept <- mean(y) - (colMeans(X) %*% beta)
-  
-  return(list('beta'=beta,
-              'intercept'=intercept[1,1]))
-  
+  # coefficients (a) and intercept (b)
+  a <- -V[1:m, m+1] / V[m+1, m+1]
+  b <- mean(Z %*% V[, m+1]) / V[m+1, m+1]
+
+  # Fitted values
+  yfit <- cbind(x, 1) %*% c(a, b)
+  resd <- y - yfit
+
+  # orthogonal distance
+  normal <- V[, m+1]
+  err <- abs((Z - meanZ) %*% normal)
+  ssq <- sum(err^2)
+
+  return( list(coeff = c(a, b), ssq = ssq, err = err,
+               fitted = yfit, resid = resd, normal = normal) )
 }
