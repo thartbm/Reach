@@ -169,7 +169,7 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
 #' This function is copied from  the `pracma` package by Hans W. Borchers:
 #' https://CRAN.R-project.org/package=pracma
 #' 
-#' I've added a proportion variance explained output to it.
+#' I've added an R.squared output.
 #' 
 #' @examples
 #' 
@@ -200,17 +200,12 @@ odregress <- function(x, y) {
   err <- abs((Z - meanZ) %*% normal)
   ssq <- sum(err^2)
   
-  # proportion of variance explained:
-  # variance explained by first principle component / total variance in data
-  # total_variance <- sum(apply(scale(Z), 2, var))
-  # eig <- eigen(cov(scale(Z)))
+  # R-squared:
+  eigenvalues <- eigen(cov(Z))$values
+  explained_variance <- max(eigenvalues)
+  unexplained_variance <- sum(eigenvalues) - explained_variance
+  R.squared <- 1 - (unexplained_variance/explained_variance)
   
-  # this stays in the same scale, which I think we need:
-  total_variance <- sum(apply(Z, 2, var))
-  eig <- eigen(cov(Z))
-  # to calculate the proportion variance explained:
-  pve <- (max(eig$values)/total_variance)
-
   return( list(coeff = c(a, b), ssq = ssq, err = err,
-               fitted = yfit, resid = resd, normal = normal, pve = pve) )
+               fitted = yfit, resid = resd, normal = normal, R.squared = R.squared) )
 }

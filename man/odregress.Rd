@@ -23,7 +23,7 @@ Perform (multiple) orthogonal distance regression.
 This function is copied from  the `pracma` package by Hans W. Borchers:
 https://CRAN.R-project.org/package=pracma
 
-I've added a proportion variance explained output to it.
+I've added an R.squared output.
 }
 \examples{
 
