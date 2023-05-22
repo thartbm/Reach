@@ -7,19 +7,23 @@
 odregress(x, y)
 }
 \arguments{
-\item{x}{A predictor matrix (variables in columns, N observations in rows).}
+\item{x}{A 'predictor' matrix (variables in columns, N observations in rows).}
 
 \item{y}{Column vector (N rows) with 'dependent' variable.}
 }
 \value{
 A list with: `coeff` (coefficients), `yfit` (fitted values), `err` (errors),
-`resd` (residuals), `ssq` (sum of squares) and `normal` (normal).
+`resd` (residuals), `ssq` (sum of squares), `normal` (normal) and `pve` (proportion
+variance explained)
 }
 \description{
-Perform orthogonal distance regression with multiple predictors.
+Perform (multiple) orthogonal distance regression.
 }
 \details{
-This function is copied from  the `pracma` package by Hans W. Borchers.
+This function is copied from  the `pracma` package by Hans W. Borchers:
+https://CRAN.R-project.org/package=pracma
+
+I've added a proportion variance explained output to it.
 }
 \examples{
 

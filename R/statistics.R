@@ -159,13 +159,18 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
 # 
 
 #' @title Orthogonal Distance Regression.
-#' @param x A predictor matrix (variables in columns, N observations in rows).
+#' @param x A 'predictor' matrix (variables in columns, N observations in rows).
 #' @param y Column vector (N rows) with 'dependent' variable.
 #' @return A list with: `coeff` (coefficients), `yfit` (fitted values), `err` (errors),
-#' `resd` (residuals), `ssq` (sum of squares) and `normal` (normal).
-#' @description Perform orthogonal distance regression with multiple predictors.
+#' `resd` (residuals), `ssq` (sum of squares), `normal` (normal) and `pve` (proportion
+#' variance explained)
+#' @description Perform (multiple) orthogonal distance regression.
 #' @details 
-#' This function is copied from  the `pracma` package by Hans W. Borchers.
+#' This function is copied from  the `pracma` package by Hans W. Borchers:
+#' https://CRAN.R-project.org/package=pracma
+#' 
+#' I've added a proportion variance explained output to it.
+#' 
 #' @examples
 #' 
 #' @export
@@ -176,7 +181,9 @@ odregress <- function(x, y) {
   n <- nrow(Z)      # no. of data points
   m <- ncol(Z) - 1  # no. of independent variables
   
-  meanZ <- repmat(apply(Z, 2, mean), n, 1)
+  # this line is different, because we don't want `repmat()`
+  meanZ <- matrix(1, n, 1) %x% matrix(apply(Z, 2, mean), nrow=1, ncol=m+1)
+  
   svdZ <- svd(Z - meanZ)
   V <- svdZ$v
   
@@ -192,7 +199,18 @@ odregress <- function(x, y) {
   normal <- V[, m+1]
   err <- abs((Z - meanZ) %*% normal)
   ssq <- sum(err^2)
+  
+  # proportion of variance explained:
+  # variance explained by first principle component / total variance in data
+  # total_variance <- sum(apply(scale(Z), 2, var))
+  # eig <- eigen(cov(scale(Z)))
+  
+  # this stays in the same scale, which I think we need:
+  total_variance <- sum(apply(Z, 2, var))
+  eig <- eigen(cov(Z))
+  # to calculate the proportion variance explained:
+  pve <- (max(eig$values)/total_variance)
 
   return( list(coeff = c(a, b), ssq = ssq, err = err,
-               fitted = yfit, resid = resd, normal = normal) )
+               fitted = yfit, resid = resd, normal = normal, pve = pve) )
 }
