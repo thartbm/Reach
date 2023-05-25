@@ -162,14 +162,11 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
 #' @param x A 'predictor' matrix (variables in columns, N observations in rows).
 #' @param y Column vector (N rows) with 'dependent' variable.
 #' @return A list with: `coeff` (coefficients), `yfit` (fitted values), `err` (errors),
-#' `resd` (residuals), `ssq` (sum of squares), `normal` (normal) and `pve` (proportion
-#' variance explained)
+#' `resd` (residuals), `ssq` (sum of squares) and `normal` (normal).
 #' @description Perform (multiple) orthogonal distance regression.
 #' @details 
 #' This function is copied from  the `pracma` package by Hans W. Borchers:
 #' https://CRAN.R-project.org/package=pracma
-#' 
-#' I've added an R.squared output.
 #' 
 #' @examples
 #' 
@@ -185,7 +182,7 @@ odregress <- function(x, y) {
   meanZ <- matrix(1, n, 1) %x% matrix(apply(Z, 2, mean), nrow=1, ncol=m+1)
   
   svdZ <- svd(Z - meanZ)
-  V <- svdZ$v
+  V <- svdZ$v # eigen vectors
   
   # coefficients (a) and intercept (b)
   a <- -V[1:m, m+1] / V[m+1, m+1]
@@ -200,12 +197,13 @@ odregress <- function(x, y) {
   err <- abs((Z - meanZ) %*% normal)
   ssq <- sum(err^2)
   
-  # R-squared:
-  eigenvalues <- eigen(cov(Z))$values
-  explained_variance <- max(eigenvalues)
-  unexplained_variance <- sum(eigenvalues) - explained_variance
-  R.squared <- 1 - (unexplained_variance/explained_variance)
+  # # R-squared... well, not really
+  # eigenvalues <- eigen(cov(Z))$values
+  # explained_variance <- max(eigenvalues)
+  # unexplained_variance <- prod(eigenvalues) / explained_variance
+  # R.squared <- 1 - (unexplained_variance/explained_variance)
   
   return( list(coeff = c(a, b), ssq = ssq, err = err,
-               fitted = yfit, resid = resd, normal = normal, R.squared = R.squared) )
+               fitted = yfit, resid = resd, normal = normal
+               ) )
 }

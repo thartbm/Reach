@@ -13,8 +13,7 @@ odregress(x, y)
 }
 \value{
 A list with: `coeff` (coefficients), `yfit` (fitted values), `err` (errors),
-`resd` (residuals), `ssq` (sum of squares), `normal` (normal) and `pve` (proportion
-variance explained)
+`resd` (residuals), `ssq` (sum of squares) and `normal` (normal).
 }
 \description{
 Perform (multiple) orthogonal distance regression.
@@ -22,8 +21,6 @@ Perform (multiple) orthogonal distance regression.
 \details{
 This function is copied from  the `pracma` package by Hans W. Borchers:
 https://CRAN.R-project.org/package=pracma
-
-I've added an R.squared output.
 }
 \examples{
 
