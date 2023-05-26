@@ -168,8 +168,23 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
 #' This function is copied from  the `pracma` package by Hans W. Borchers:
 #' https://CRAN.R-project.org/package=pracma
 #' 
-#' @examples
+#' For the 2D case, a pearson correlation coefficient can be returned.
+#' No usable coefficient of determination seems to exist for other cases.
 #' 
+#' @examples
+#' # we get data from the iris data set that is pretty correlated
+#' # but since sepal length does not cause petal length,
+#' # we use orthogonal distance regression:
+#' x <- as.matrix(iris[101:150,1])
+#' y <- as.matrix(iris[101:150,3])
+#' odr <- odregress(x,y)
+#' 
+#' plot(x,y)
+#' abline(a=odr$coeff[2], b=odr$coeff[1], col='red')
+#' 
+#' # compare to ordinary least squares:
+#' ols <- lm(y ~ x)
+#' abline(a=ols$coefficients[1], b=ols$coefficients[2], col='blue')
 #' @export
 odregress <- function(x, y) {
   stopifnot(is.numeric(x), is.numeric(y))
@@ -200,8 +215,21 @@ odregress <- function(x, y) {
   # # R-squared... well, not really
   # eigenvalues <- eigen(cov(Z))$values
   # explained_variance <- max(eigenvalues)
-  # unexplained_variance <- prod(eigenvalues) / explained_variance
+  # unexplained_variance <- sum(eigenvalues) - explained_variance
   # R.squared <- 1 - (unexplained_variance/explained_variance)
+  
+  
+  if (dim(Z)[2] == 2) {
+    
+    sZ <- scale(Z, scale=FALSE)
+    r <-  sum(apply(sZ, 1, prod)) / prod( sqrt( colSums(sZ^2) ) )
+    
+    return( list(coeff = c(a, b), ssq = ssq, err = err,
+                 fitted = yfit, resid = resd, normal = normal,
+                 r = r
+    ) )
+    
+  }
   
   return( list(coeff = c(a, b), ssq = ssq, err = err,
                fitted = yfit, resid = resd, normal = normal

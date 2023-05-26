@@ -21,7 +21,22 @@ Perform (multiple) orthogonal distance regression.
 \details{
 This function is copied from  the `pracma` package by Hans W. Borchers:
 https://CRAN.R-project.org/package=pracma
+
+For the 2D case, a pearson correlation coefficient can be returned.
+No usable coefficient of determination seems to exist for other cases.
 }
 \examples{
+# we get data from the iris data set that is pretty correlated
+# but since sepal length does not cause petal length,
+# we use orthogonal distance regression:
+x <- as.matrix(iris[101:150,1])
+y <- as.matrix(iris[101:150,3])
+odr <- odregress(x,y)
 
+plot(x,y)
+abline(a=odr$coeff[2], b=odr$coeff[1], col='red')
+
+# compare to ordinary least squares:
+ols <- lm(y ~ x)
+abline(a=ols$coefficients[1], b=ols$coefficients[2], col='blue')
 }
