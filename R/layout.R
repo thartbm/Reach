@@ -14,9 +14,9 @@
 #' # and 3 columns
 #' posterGuides()
 #' @export
-posterGuides <- function(size         = 215.9,
-                         outermargins = 10,
-                         innermargins = 5,
+posterGuides <- function(size          = 215.9,
+                         outermargins  = 10,
+                         innermargins  = 5,
                          ncolumns      = 3) {
   
   ninnermargins <- max(0,ncolumns-1)
