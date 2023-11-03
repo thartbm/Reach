@@ -19,7 +19,6 @@
 #' - Rs: the slow retention rate
 #' - Rf: the fast retention rate 
 #' @examples
-#' ?
 #' @export
 twoRateModel <- function(par, schedule) {
   
@@ -85,7 +84,6 @@ twoRateModel <- function(par, schedule) {
 #' - Rs: the slow retention rate
 #' - Rf: the fast retention rate 
 #' @examples
-#' ?
 #' @export
 twoRateMSE <- function(par, schedule, reaches, checkStability=FALSE) {
   
@@ -275,7 +273,6 @@ asymptoticDecayModel <- function(par, schedule) {
 #' The schedule is usually a sequence of ones, which is multiplied by the
 #' asymptote in the function.
 #' @examples
-#' ?
 #' @export
 asymptoticDecayMSE <- function(par, schedule, signal) {
 

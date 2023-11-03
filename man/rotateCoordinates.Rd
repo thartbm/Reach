@@ -22,6 +22,3 @@ Rotate a trajectory of X,Y coordinates.
 \details{
 Not yet.
 }
-\examples{
-
-}

@@ -32,6 +32,3 @@ following element:
 The schedule is usually a sequence of ones, which is multiplied by the
 asymptote in the function.
 }
-\examples{
-?
-}

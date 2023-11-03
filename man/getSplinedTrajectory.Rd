@@ -24,9 +24,3 @@ trajectory given by x, y and t.
 \description{
 Returns a 2D trajectory smoothed by splining.
 }
-\details{
-
-}
-\examples{
-
-}

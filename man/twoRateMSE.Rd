@@ -33,6 +33,3 @@ following elements:
 - Rs: the slow retention rate
 - Rf: the fast retention rate
 }
-\examples{
-?
-}
