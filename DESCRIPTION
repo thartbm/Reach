@@ -9,7 +9,7 @@ Maintainer: Marius 't Hart <thartbm@gmail.com>
 Description: This package provides utility functions for analyzing reach trajectories.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Depends:
   R (>= 4.0),
   osfr (>= 0.2.8),
