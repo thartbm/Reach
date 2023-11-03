@@ -14,7 +14,7 @@
 #' # and 3 columns
 #' posterGuides()
 #' @export
-posterGuides <- function(size          = 215.9,
+posterGuides <- function(size          = 279.4,
                          outermargins  = 10,
                          innermargins  = 5,
                          ncolumns      = 3) {
