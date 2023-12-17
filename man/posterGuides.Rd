@@ -4,7 +4,7 @@
 \alias{posterGuides}
 \title{Calculate coordinates for guides on a poster}
 \usage{
-posterGuides(size = 215.9, outermargins = 10, innermargins = 5, ncolumns = 3)
+posterGuides(size = 279.4, outermargins = 10, innermargins = 5, ncolumns = 3)
 }
 \arguments{
 \item{size}{The size (usually width) of the poster}
