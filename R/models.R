@@ -471,8 +471,8 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
     hi <- c(1,asymptoteRange[2])
   } else {
     searchgrid <- expand.grid('lambda' = parvals )
-    lo <- c(0)
-    hi <- c(1)
+    lo <- c(0,asymptoteRange[1])
+    hi <- c(1,asymptoteRange[2])
   }
   # evaluate starting positions:
   MSE <- apply(searchgrid, FUN=exponentialMSE, MARGIN=c(1), signal=signal, timepoints=timepoints, mode=mode, setN0=setN0)
