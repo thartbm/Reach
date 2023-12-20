@@ -470,22 +470,23 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
     lo <- c(0,asymptoteRange[1])
     hi <- c(1,asymptoteRange[2])
   } else {
-    searchgrid <- expand.grid('lambda' = parvals )
-    lo <- c(0,asymptoteRange[1])
-    hi <- c(1,asymptoteRange[2])
+    searchgrid <- expand.grid('lambda' = parvals,
+                              'N0'     = setN0)
+    lo <- c(0,setN0)
+    hi <- c(1,setN0)
   }
   # evaluate starting positions:
   MSE <- apply(searchgrid, FUN=exponentialMSE, MARGIN=c(1), signal=signal, timepoints=timepoints, mode=mode, setN0=setN0)
   
-  if (is.null(setN0)) {
-    X <- data.frame(searchgrid[order(MSE)[1:gridfits],])
-  } else {
-    X <- data.frame('lambda'=searchgrid[order(MSE)[1:gridfits],])
-  }
+  # if (is.null(setN0)) {
+  #   X <- data.frame(searchgrid[order(MSE)[1:gridfits],])
+  # } else {
+  #   X <- data.frame('lambda'=searchgrid[order(MSE)[1:gridfits],])
+  # }
 
   # run optimx on the best starting positions:
   allfits <- do.call("rbind",
-                     apply( X,
+                     apply( data.frame(searchgrid[order(MSE)[1:gridfits],]),
                             MARGIN=c(1),
                             FUN=optimx::optimx,
                             fn=exponentialMSE,
