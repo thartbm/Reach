@@ -439,6 +439,9 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' @param gridfits Number of best results from gridsearch that are used for
 #' optimizing a fit.
 #' @param setN0 NULL or number, if the asymptote is known, it can be set here.
+#' @param asymptoteRange NULL or a vector specifying the upper and lower bound for
+#' the asymptote (N0). If NULL, the range will be (-1,2) * max(signal) which may be 
+#' too wide for very noisy data.
 #' @return A named numeric vector with the optimal parameter that fits a simple
 #' rate model to the data as best as possible, with these elements:
 #' - lambda: the rate of change in the range [0,1]
@@ -451,12 +454,15 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' # write example!
 #' @import optimx
 #' @export
-exponentialFit <- function(signal, timepoints=length(signal), mode='learning', gridpoints=11, gridfits=10, setN0=NULL) {
+exponentialFit <- function(signal, timepoints=length(signal), mode='learning', gridpoints=11, gridfits=10, setN0=NULL,asymptoteRange=NULL) {
   
   # set the search grid:
   parvals <- seq(1/gridpoints/2,1-(1/gridpoints/2),1/gridpoints)
-  
-  asymptoteRange <- c(-1,2)*max(abs(signal), na.rm=TRUE)
+
+  if (is.null(asymptoteRange)) {
+    # set a wiiiiide range... especially for single participants, the range may or may not work depending on how noisy their data is
+    asymptoteRange <- c(-1,2)*max(abs(signal), na.rm=TRUE)
+  }
   
   # define the search grid:
   # if (is.numeric(setN0)) {
