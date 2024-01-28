@@ -189,14 +189,14 @@ etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
 odregress <- function(x, y) {
   stopifnot(is.numeric(x), is.numeric(y))
 
-  Z <- cbind(x, y)
+  Z <- cbind(x, y)  # bind data in one matrix
   n <- nrow(Z)      # no. of data points
   m <- ncol(Z) - 1  # no. of independent variables
   
-  # this line is different, because we don't want `repmat()`
+  # this line is different, because we don't want `repmat()` as dependency
   meanZ <- matrix(1, n, 1) %x% matrix(apply(Z, 2, mean), nrow=1, ncol=m+1)
   
-  svdZ <- svd(Z - meanZ)
+  svdZ <- svd(Z - meanZ) # singular value decomposition
   V <- svdZ$v # eigen vectors
   
   # coefficients (a) and intercept (b)
@@ -211,6 +211,10 @@ odregress <- function(x, y) {
   normal <- V[, m+1]
   err <- abs((Z - meanZ) %*% normal)
   ssq <- sum(err^2)
+  
+  # R-squared: look at pls::pcr()
+  # the below stuff is incorrect
+  
   
   # # R-squared... well, not really
   # eigenvalues <- eigen(cov(Z))$values
@@ -235,3 +239,7 @@ odregress <- function(x, y) {
                fitted = yfit, resid = resd, normal = normal
                ) )
 }
+
+# here is how to get regression confidence intervals:
+# https://rpubs.com/aaronsc32/regression-confidence-prediction-intervals
+# but I think this only works for regular regression, not ODR or (PCA based regression)
