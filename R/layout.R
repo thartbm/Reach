@@ -46,8 +46,8 @@ posterGuides <- function(size          = 279.4,
 #' @export
 colorMix <- function(a='#41ffc9', b='#1d7791', balance=c(1,1)) {
   
-  a <- col2rgb(a,alpha=TRUE)/255
-  b <- col2rgb(b,alpha=TRUE)/255
+  a <- grDevices::col2rgb(a,alpha=TRUE)/255
+  b <- grDevices::col2rgb(b,alpha=TRUE)/255
   
   w <- balance / sum(balance)
   
@@ -56,7 +56,7 @@ colorMix <- function(a='#41ffc9', b='#1d7791', balance=c(1,1)) {
   B <- (a[3]*w[1]) + (b[3]*w[2])
   A <- (a[4]*w[1]) + (b[4]*w[2])
   
-  return(rgb(red=R, green=G, blue=B, alpha=A))
+  return(grDevices::rgb(red=R, green=G, blue=B, alpha=A))
   
 }
 
@@ -69,12 +69,12 @@ colorMix <- function(a='#41ffc9', b='#1d7791', balance=c(1,1)) {
 #' @export
 colorSaturation <- function(col='#41ffc9', sat.mult=1.25) {
   
-  inter <- rgb2hsv(col2rgb(col))
+  inter <- grDevices::rgb2hsv(grDevices::col2rgb(col))
   
   sat.mult  <- max(0, sat.mult) 
   inter[2,] <- min(1, inter[2,] * sat.mult)
   
-  return(hsv(inter[1,], inter[2,], inter[3,]))
+  return(grDevices::hsv(inter[1,], inter[2,], inter[3,]))
   
 }
 
@@ -116,15 +116,15 @@ colorAlpha <- function(col, alpha = 34) {
   # print(colornames)
   
   # get RGB values for named color
-  rgb.val <- t(col2rgb(col))
+  rgb.val <- t(grDevices::col2rgb(col))
   
   # add alpha column:
   # rgb.val <- rbind(rgb.val, rep(alpha, dim(rgb.val)[1]))
   
   ## Make new color using input color as base and alpha set by transparency
-  t.col <- rgb(rgb.val,
-               alpha = alpha,
-               max   = 255)
+  t.col <- grDevices::rgb( rgb.val,
+                           alpha = alpha,
+                           max   = 255)
   
   names(t.col) <- colornames
   
