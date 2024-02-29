@@ -19,6 +19,7 @@
 #' - Rs: the slow retention rate
 #' - Rf: the fast retention rate 
 #' @examples
+#' # write example...
 #' @export
 twoRateModel <- function(par, schedule) {
   
@@ -84,6 +85,7 @@ twoRateModel <- function(par, schedule) {
 #' - Rs: the slow retention rate
 #' - Rf: the fast retention rate 
 #' @examples
+#' # write example...
 #' @export
 twoRateMSE <- function(par, schedule, reaches, checkStability=FALSE) {
   
@@ -371,7 +373,7 @@ twoRateFit <- function(schedule, reaches, gridpoints=6, gridfits=6, checkStabili
 #' - lambda: learning rate
 #' - N0: asymptote
 #' @examples
-#' # write example!
+#' exponentialModel(par=c('lambda'=0.2, 'N0'=25), timepoints=100)
 #' @export
 exponentialModel <- function(par, timepoints, mode='learning', setN0=NULL) {
   
@@ -414,7 +416,9 @@ exponentialModel <- function(par, timepoints, mode='learning', setN0=NULL) {
 #' - lambda: the learning rate
 #' - N0: the asymptote
 #' @examples
-#' # write example?
+#' data(tworatedata)
+#' learning <- rowMeans(tworatedata[which(tworatedata$block == 2),c(4:20)], na.rm=TRUE)
+#' exponentialMSE(par=c('lambda'=0.2, 'N0'=25), signal=learning)
 #' @export
 exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode='learning', setN0=NULL) {
   
@@ -451,7 +455,9 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' @details
 #' ?
 #' @examples
-#' # write example!
+#' data(tworatedata)
+#' learning <- rowMeans(tworatedata[which(tworatedata$block == 2),c(4:20)], na.rm=TRUE)
+#' exponentialFit(signal=learning)
 #' @import optimx
 #' @export
 exponentialFit <- function(signal, timepoints=length(signal), mode='learning', gridpoints=11, gridfits=10, setN0=NULL,asymptoteRange=NULL) {

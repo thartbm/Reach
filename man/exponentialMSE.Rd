@@ -42,5 +42,7 @@ following element:
 - N0: the asymptote
 }
 \examples{
-# write example?
+data(tworatedata)
+learning <- rowMeans(tworatedata[which(tworatedata$block == 2),c(4:20)], na.rm=TRUE)
+exponentialMSE(par=c('lambda'=0.2, 'N0'=25), signal=learning)
 }

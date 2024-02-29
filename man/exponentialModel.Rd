@@ -170,5 +170,5 @@ following element:
 - N0: asymptote
 }
 \examples{
-# write example!
+exponentialModel(par=c('lambda'=0.2, 'N0'=25), timepoints=100)
 }

@@ -53,5 +53,7 @@ evaluate a simple exponential function to reach deviations.
 ?
 }
 \examples{
-# write example!
+data(tworatedata)
+learning <- rowMeans(tworatedata[which(tworatedata$block == 2),c(4:20)], na.rm=TRUE)
+exponentialFit(signal=learning)
 }
