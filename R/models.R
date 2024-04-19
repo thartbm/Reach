@@ -457,7 +457,11 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' @examples
 #' data(tworatedata)
 #' learning <- rowMeans(tworatedata[which(tworatedata$block == 2),c(4:20)], na.rm=TRUE)
-#' exponentialFit(signal=learning)
+#' par <- exponentialFit(signal=learning)
+#' par
+#' plot(c(0:99), learning, ylim=c(0,35))
+#' expfit <- Reach::exponentialModel(par=pars, timepoints=seq(0,99,0.5))
+#' lines(expfit, col='red')
 #' @import optimx
 #' @export
 exponentialFit <- function(signal, timepoints=length(signal), mode='learning', gridpoints=11, gridfits=10, setN0=NULL,asymptoteRange=NULL) {
