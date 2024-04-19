@@ -55,5 +55,9 @@ evaluate a simple exponential function to reach deviations.
 \examples{
 data(tworatedata)
 learning <- rowMeans(tworatedata[which(tworatedata$block == 2),c(4:20)], na.rm=TRUE)
-exponentialFit(signal=learning)
+par <- exponentialFit(signal=learning)
+par
+plot(c(0:99), learning, ylim=c(0,35))
+expfit <- Reach::exponentialModel(par=par, timepoints=seq(0,99,0.5))
+lines(expfit, col='red')
 }
