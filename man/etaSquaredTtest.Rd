@@ -31,3 +31,6 @@ two-sample t-test comparing the difference in means to a hypothetical value,
 nor does this function differentiate between single-sided or two-sided 
 t-tests.
 }
+\examples{
+#
+}

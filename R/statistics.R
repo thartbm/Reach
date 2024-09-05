@@ -78,7 +78,7 @@ getConfidenceInterval <- function(data, variance = stats::var(data, na.rm=TRUE),
 #' nor does this function differentiate between single-sided or two-sided 
 #' t-tests.
 #' @examples
-#' 
+#' #
 #' @export
 etaSquaredTtest <- function(g1,g2=NA,mu=0,na.rm=TRUE) {
   

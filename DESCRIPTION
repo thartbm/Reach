@@ -1,7 +1,7 @@
 Package: Reach
 Type: Package
 Title: Download and analyse 2D reaching and hand localization data
-Version: 2024.04.19
+Version: 2024.09.05
 Authors@R: c(person("B. Marius", "'t Hart", email = "thartbm@gmail.com",
                   role = c("aut", "cre")),
              person("Denise Y.P.", "Henriques", email = "deniseh@yorku.ca", role = "aut"))
@@ -9,7 +9,7 @@ Maintainer: Marius 't Hart <thartbm@gmail.com>
 Description: This package provides utility functions for analyzing reach trajectories.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Depends:
   R (>= 4.0),
   osfr (>= 0.2.8),

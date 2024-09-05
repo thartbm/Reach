@@ -56,5 +56,5 @@ the target, given by X (a float), the default setting: 'pr0.33333'
 There are other options, but they are not consolidated yet.
 }
 \examples{
-?
+#
 }

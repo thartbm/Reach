@@ -23,3 +23,9 @@ will always be zero.
 \description{
 Returns velocity based on spline-smoothed trajectory.
 }
+\details{
+#
+}
+\examples{
+#
+}

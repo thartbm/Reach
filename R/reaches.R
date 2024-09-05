@@ -98,7 +98,7 @@
 #' @description Rotate a trajectory of X,Y coordinates.
 #' @details Not yet.
 #' @examples
-#' 
+#' #
 #' @export
 rotateCoordinates <- function(df,angle,origin=c(0,0)) {
   
@@ -153,7 +153,7 @@ rotateCoordinates <- function(df,angle,origin=c(0,0)) {
 #' 
 #' There are other options, but they are not consolidated yet.
 #' @examples
-#' ?
+#' #
 #' @export
 getReachAngleAt <- function(trialdf, location='pr0.33333', posunit='pix', timeunit='ms', device='hand', holdvelocity=NA, holdduration=NA) {
   
@@ -326,9 +326,9 @@ getReachAngleAt <- function(trialdf, location='pr0.33333', posunit='pix', timeun
 #' @description 
 #' Returns a 2D trajectory smoothed by splining.
 #' @details 
-#' 
+#' #
 #' @examples
-#' 
+#' #
 #' @export
 getSplinedTrajectory <- function(x, y, t, length.out=length(t), spar=0.01) {
   
@@ -355,9 +355,9 @@ getSplinedTrajectory <- function(x, y, t, length.out=length(t), spar=0.01) {
 #' @description 
 #' Returns velocity based on spline-smoothed trajectory.
 #' @details 
-#' 
+#' #
 #' @examples
-#' 
+#' #
 #' @export
 getSplinedVelocity <- function(x, y, t, spar=0.01) {
   

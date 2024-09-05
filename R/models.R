@@ -529,3 +529,52 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
   return(winpar)
   
 }
+
+
+
+# Model Evaluation -----
+
+
+#' @title Calculate AIC based on MSE.
+#' @param MSE 
+#' @param k A vector of the number of free parameters for each model.
+#' @param N The number of observations in the data set.
+#' @return A vector of AIC values for each model.
+#' @description This function 
+#' @details
+#' #
+#' @examples
+#' #
+#' @export
+AIC <- function(MSE, k, N) {
+  return( (N * log(MSE)) + (2 * k) )
+}
+
+#' @title Calculate AIC based on MSE, corrected for low parameter models.
+#' @param MSE A vector of mean squared errors between data and model predictions.
+#' @param k A vector of the number of free parameters for each model.
+#' @param N The number of observations in the data set.
+#' @return A vector of AIC values for each model, corrected for low parameter numbers.
+#' @description ...
+#' @details
+#' #
+#' @examples
+#' #
+#' @export
+AICc <- function(MSE, k, N) {
+  return( AIC(MSE, k, N) * (((2*k^2) + 2*k) / (N - k - 1)) )
+}
+
+#' @title Calculate relative likelihood.
+#' @param crit Vector of criterion values for models.
+#' @return Vector of likelihoods. The best model will have a likelihood of 1, and
+#' models with likelihoods lower than 0.05 could be considered "significantly" worse
+#' than the best model.
+#' @description This function calculate a relative log likelihood using criterion values
+#' for a set of models. The criterion should indicate a better model for a lower value.
+#' @details If the input vector is named, the output vector will also be named.
+#' @examples #
+#' @export
+relativeLikelihood <- function(crit) {
+  return( exp( ( min( crit  ) - crit  ) / 2 ) )
+}
