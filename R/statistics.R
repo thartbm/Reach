@@ -243,3 +243,55 @@ odregress <- function(x, y) {
 # here is how to get regression confidence intervals:
 # https://rpubs.com/aaronsc32/regression-confidence-prediction-intervals
 # but I think this only works for regular regression, not ODR or (PCA based regression)
+
+#' @title Latin Square
+#' @param order An integer value of 2 or higher, setting the size of the latin square.
+#' @param seed Optional seed for the random number generator
+#' @return A matrix of size order x order
+#' @description Returns a latin square where each index 1:order occurs in each row
+#' as well as in each column.
+#' @details 
+#' If you want the same latin square repeatedly, set the seed argument.
+#' @examples
+#' latinSquare(5)
+#' @export
+latinSquare <- function(order, seed=NULL) {
+  
+  # order has to be an integer value of at least 2
+  # and up to some maximum that the machine can handle
+  if (order < 2) {
+    cat('order must be 2 or higher, quitting\n')
+    return(NA)
+  }
+  
+  # order has to be an integer  
+  o <- as.integer(order)
+  if (o != order) {
+    cat(sprintf('order must be an integer, rounding %0.8f to %d\n', order, o))
+  }
+  
+  # make an empty matrix to hold the latin square:
+  # it should have order rows and order columns
+  lsq <- matrix(data=NA, nrow = o, ncol = o)
+  
+  # first row will be filled with the numbers 1 through to order
+  onerow <- c(1:o)
+  # we make sure each row and column is unique
+  for (rown in c(1:o)) {
+    lsq[rown,] <- onerow
+    onerow <- c(onerow[2:o], onerow[1])
+  }
+  
+  # now we shuffle, using the RNG seed, if provided:
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
+  
+  # first shuffle the rows:
+  lsq <- lsq[sample(c(1:o)),]
+  # then shuffle columns:
+  lsq <- lsq[,sample(c(1:o))]
+  
+  return(lsq)
+  
+}
