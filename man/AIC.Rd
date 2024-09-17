@@ -7,7 +7,7 @@
 AIC(MSE, k, N)
 }
 \arguments{
-\item{MSE}{}
+\item{MSE}{A vector of Mean Squared Errors, one for each model.}
 
 \item{k}{A vector of the number of free parameters for each model.}
 

@@ -536,7 +536,7 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
 
 
 #' @title Calculate AIC based on MSE.
-#' @param MSE 
+#' @param MSE A vector of Mean Squared Errors, one for each model.
 #' @param k A vector of the number of free parameters for each model.
 #' @param N The number of observations in the data set.
 #' @return A vector of AIC values for each model.
