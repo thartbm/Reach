@@ -28,7 +28,7 @@ generateRandomIDs <- function(checkFile='randomIDs.csv', IDlength=3, number=100,
   
   # we need to know which ones we already generated/used
   if (file.exists(checkFile)) {
-    existingList <- read.csv(checkFile, stringsAsFactors=F)
+    existingList <- utils::read.csv(checkFile, stringsAsFactors=F)
   } else {
     existingList <- data.frame('randomIDs'=c())
   }
@@ -72,7 +72,7 @@ generateRandomIDs <- function(checkFile='randomIDs.csv', IDlength=3, number=100,
   idList <- rbind(existingList,newList)
   
   # write to file:
-  write.csv(idList, file=addToFile, row.names=FALSE, quote=TRUE)
+  utils::write.csv(idList, file=addToFile, row.names=FALSE, quote=TRUE)
   
 }
 

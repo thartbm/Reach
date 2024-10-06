@@ -18,4 +18,5 @@ Depends:
 Imports:
   stats,
   graphics,
-  grDevices
+  grDevices,
+  utils
