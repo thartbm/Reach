@@ -1,4 +1,5 @@
 
+`%notin%` <- Negate(`%in%`)
 
 #' @title Expand grid with values from data frame columns
 #' @param df A data frame.
@@ -23,7 +24,7 @@ df.col.grid <- function(df, columns) {
   # and it will have all unique values (sorted) that the data frame
   # contains for that variable
   for (col in columns) {
-    grid.factors[[col]] <- sort(unique(allData[,col]))
+    grid.factors[[col]] <- sort(unique(df[,col]))
   }
   
   # finally we get all combinations of those values,

@@ -24,7 +24,7 @@ generateRandomIDs <- function(checkFile='randomIDs.csv', IDlength=3, number=100,
   
   # we use non-reproducible and cryptographically secure sequences
   # from the openssl package
-  library(openssl)
+  # library(openssl)
   
   # we need to know which ones we already generated/used
   if (file.exists(checkFile)) {
