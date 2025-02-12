@@ -10,7 +10,8 @@ downloadOSFdata(
   folder,
   overwrite = TRUE,
   unzip = FALSE,
-  removezips = FALSE
+  removezips = FALSE,
+  wait = 5
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ of filenames to download from those folders on the OSF repository}
 \item{unzip}{(Boolean) Whether or not to unzip zip files.}
 
 \item{removezips}{(Boolean) Whether or not to remove zip files after unzipping.}
+
+\item{wait}{(Numeric) Number of seconds to wait in between downloads.}
 }
 \value{
 empty
