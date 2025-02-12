@@ -422,7 +422,7 @@ exponentialModel <- function(par, timepoints, mode='learning', setN0=NULL) {
 #' @export
 exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode='learning', setN0=NULL) {
   
-  MSE <- mean((exponentialModel(par, timepoints, mode=mode, setN0=setN0)$output - signal)^2, na.rm=TRUE)
+  MSE <- mean((Reach::exponentialModel(par, timepoints, mode=mode, setN0=setN0)$output - signal)^2, na.rm=TRUE)
   
   return( MSE )
   
@@ -505,7 +505,7 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
                      apply( data.frame(searchgrid[order(MSE)[1:gridfits],]),
                             MARGIN=c(1),
                             FUN=optimx::optimx,
-                            fn=exponentialMSE,
+                            fn=Reach::exponentialMSE,
                             method     = 'L-BFGS-B',
                             lower      = lo,
                             upper      = hi,
@@ -524,6 +524,149 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
                  'N0'     = setN0)
     names(winpar) <- c('lambda', 'N0')
   }
+  
+  # return the best parameters:
+  return(winpar)
+  
+}
+
+
+
+# multi-modal -----
+
+#' @title Probability of data points given a multi-modal distribution.
+#' @param par A named vector with the model parameter (see details).
+#' @param x A sequence of numbers to evaluate the probability of.
+#' @return A vector of probabilities according to the multi modal normal distribution.
+#' @description This function is part of a set of functions to fit and
+#' evaluate multi modal (normal) distribution of data points.
+#' @details The `par` argument is a data frame (or named list) with columns:
+#' - m: mean
+#' - s: standard deviation
+#' - w: weight
+#' for every normal distribution of the model
+#' @export
+multiModalModel <- function(par, x) {
+  
+  probs <- rep(0, length(x))
+  
+  m <- par$m # means
+  s <- par$s # standard deviations
+  w <- par$w # weights
+  
+  # weights should add up to 1:
+  w <- w / sum(w)
+  
+  for (nd in c(1:length(m))) {
+    
+    probs <- probs + w[nd] * dnorm( x    = x,
+                                    mean = m[nd],
+                                    sd   = s[nd]  )
+    
+  }
+  
+  return(probs) # this is not a prediction, but a likelihood for each of the points in X already
+  
+}
+
+#' @title Likelihood of data given a multi-modal probability distribution.
+#' @param par A named vector with the model parameter (see details).
+#' @param x A sequence of numbers to evaluate the probability of.
+#' @return The sum of the log of the probabilities returned by `multiModalModel()`.
+#' @description This function is part of a set of functions to fit and
+#' evaluate multi modal (normal) distribution of data points.
+#' @details The `par` argument is a data frame (or named list) with columns:
+#' - m: mean
+#' - s: standard deviation
+#' - w: weight
+#' for every normal distribution of the model
+#' @export
+multiModalModelLikelihood <- function(par, x) {
+  
+  n = length(par)/3
+  # print(list(c(1:n),c('m','s','w')))
+  
+  par <- data.frame(matrix(par,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
+  
+  probs <- multiModalModel(par, x)
+  
+  return(sum(log(probs)))
+  
+}
+
+#' @title Grid search to find likely N-modal distributions parameters given data. 
+#' @param x A sequence of numbers to evaluate the probability of.
+#' @param n The number of normal distributions to consider.
+#' @param points The number of points to search in each dimension of the search grid.
+#' @param best Return the parameters for the `best` best fits.
+#' @return The best parameters for N-modal distributions for a data set x.
+#' @description This function is part of a set of functions to fit and
+#' evaluate multi-modal (normal) distribution of data points.
+#' @examples
+#' multiModalGridSearch(x=c(rnorm(50,0,2),rnorm(100,10,4)), n=2, points=7, best=10)
+#' @export
+multiModalGridSearch <- function(x, n=2, points=7, best=10) {
+  
+  # all parameter values to expand will be stored here:
+  v <- list()
+  # add n * points:
+  for (i in c(1:n)) {
+    # add means:
+    v[[sprintf('m%d', i)]] <- seq(min(x),max(x),length.out=points)
+    # add standard deviations:
+    v[[sprintf('s%d', i)]] <- seq(min(abs(diff(x)))/2, abs(diff(range(x))), length.out=points)
+    # add weights:
+    v[[sprintf('w%d', i)]] <- seq(0.001,0.999,length.out=points)
+  }
+
+  df_grid <- expand.grid(v)
+  
+  # get all the likelihoods:
+  likelihoods <- apply(X=df_grid, MARGIN=c(1), FUN=multiModalModelLikelihood, x=x)
+  
+  # indexes of the best ones:
+  idx <- rev(order(unlist(likelihoods)))[1:best]
+  
+  # return the best parameter sets:
+  return(df_grid[idx,])
+  
+}
+
+
+multiModalFit <- function(x, n=2, points=9) {
+  
+  top <- multiModalGridSearch(x, n, points=points)
+  
+  
+  # # add means:
+  # v[[sprintf('m%d', i)]] <- seq(min(x),max(x),length.out=points)
+  # # add standard deviations:
+  # v[[sprintf('s%d', i)]] <- seq(min(abs(diff(x)))/2, abs(diff(range(x))), length.out=points)
+  # # add weights:
+  # v[[sprintf('w%d', i)]] <- seq(0.001,0.999,length.out=points)
+  
+  lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.0001), n)
+  hi <- rep( c(max(x), abs(diff(range(x))), 0.9999), n)
+  
+  control <- list('maximize'=TRUE)
+  # run optimx on the best starting positions:
+  allfits <- do.call("rbind",
+                     apply( top,
+                            MARGIN=c(1),
+                            FUN=optimx::optimx,
+                            fn=multiModalModelLikelihood,
+                            method     = 'nlminb',
+                            lower      = lo,
+                            upper      = hi,
+                            control    = control,
+                            x          = x) )
+  
+  print(allfits)
+  
+  # pick the best fit:
+  win <- allfits[rev(order(allfits$value))[1],]
+  
+  winpar <- unlist(win[1:(3*n)])
   
   # return the best parameters:
   return(winpar)
