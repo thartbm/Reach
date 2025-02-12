@@ -25,11 +25,11 @@ Only used for method='t-distr'.}
 t-distribution to _calculate_ the confidence interval or to bootstrap it by
 resampling from the sample in 'data'. Using the sample t-distribution can 
 be much faster and allows overriding the sample variance, and according to 
-the central limit theorom, the distribution of sample means is normal, so that is fine.
+the central limit theorem, the distribution of sample means is normal, so that is fine.
 Bootstrapping is slower but works on any data distribution and allows other
 descriptors like the median, or variance by setting FUN.}
 
-\item{resamples}{The number of samples to draw with resplacement from the data
+\item{resamples}{The number of samples to draw with replacement from the data
 to bootstrap values of the descriptor.}
 
 \item{FUN}{The function to use as descriptor for every sample when bootstrapping.}

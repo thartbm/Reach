@@ -8,10 +8,10 @@
 #' t-distribution to _calculate_ the confidence interval or to bootstrap it by
 #' resampling from the sample in 'data'. Using the sample t-distribution can 
 #' be much faster and allows overriding the sample variance, and according to 
-#' the central limit theorom, the distribution of sample means is normal, so that is fine.
+#' the central limit theorem, the distribution of sample means is normal, so that is fine.
 #' Bootstrapping is slower but works on any data distribution and allows other
 #' descriptors like the median, or variance by setting FUN.
-#' @param resamples The number of samples to draw with resplacement from the data
+#' @param resamples The number of samples to draw with replacement from the data
 #' to bootstrap values of the descriptor.
 #' @param FUN The function to use as descriptor for every sample when bootstrapping. 
 #' @return A vector with the upper and lower bound of the confidence interval.
@@ -243,3 +243,29 @@ odregress <- function(x, y) {
 # here is how to get regression confidence intervals:
 # https://rpubs.com/aaronsc32/regression-confidence-prediction-intervals
 # but I think this only works for regular regression, not ODR or (PCA based regression)
+
+
+#' @title Calculate surface area of a confidence ellipse on 2D data.
+#' @param df A data frame, with (at least) 2 variables with the same unit.
+#' @param vars A list of column to use in the data frame, if `df` has more than 
+#' 2 columns.
+#' @param conf.level The level of confidence to use. Default is 0.95.
+#' @return The surface area of an ellipse that contains the mean of the data in 95\%
+#' of replications of the same experiment.
+#' @description This function uses PCA to calculate the standard deviation across
+#' the two main axes of the spread of 2D data. Multiplying that length-2 vector 
+#' by `pi` and the confidence level gives the surface area of an ellipse that will 
+#' contain the mean in some percentage of cases.
+#' This relies on the data being in the same unit, and makes most sense if it is real 
+#' data (such as locations in a cartesian coordinate system).
+#' @details Not yet.
+#' @export
+get95CIellipse <- function(df, vars=NULL, conf.level = 0.95) {
+  
+  if (!is.null(vars)) {
+    df <- df[, vars]
+  }
+  
+  return(stats::qnorm(conf.level) * prod(stats::princomp( df )$sdev) * pi)
+  
+}
