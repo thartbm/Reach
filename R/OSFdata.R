@@ -8,10 +8,11 @@
 #' @param folder Folder in the current working directory to store files in.
 #' @param unzip (Boolean) Whether or not to unzip zip files.
 #' @param removezips (Boolean) Whether or not to remove zip files after unzipping.
+#' @param wait (Numeric) Number of seconds to wait in between downloads.
 #' @return empty
 #' @import osfr
 #' @export
-downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE) {
+downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE,wait=5) {
   
   # get the 5-character repository name:
   slash_idx <- as.numeric(gregexpr(pattern ='/',repository)[[1]])
@@ -72,6 +73,8 @@ downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALS
                            path = sprintf('%s', folder), 
                            conflicts = conflict)
       }
+      
+      Sys.sleep(wait)
       
     }
     
