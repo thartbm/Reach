@@ -12,7 +12,7 @@
 #' @return empty
 #' @import osfr
 #' @export
-downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE,wait=5) {
+downloadOSFdata <- function(repository,filelist,folder,overwrite=TRUE,unzip=FALSE,removezips=FALSE,wait=40) {
   
   # get the 5-character repository name:
   slash_idx <- as.numeric(gregexpr(pattern ='/',repository)[[1]])

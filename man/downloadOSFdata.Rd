@@ -11,7 +11,7 @@ downloadOSFdata(
   overwrite = TRUE,
   unzip = FALSE,
   removezips = FALSE,
-  wait = 5
+  wait = 40
 )
 }
 \arguments{
