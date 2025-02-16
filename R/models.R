@@ -531,6 +531,146 @@ exponentialFit <- function(signal, timepoints=length(signal), mode='learning', g
 }
 
 
+# Offset error decay -----
+
+#' @title Values of an offset exponential decay given parameters and time points
+#' @param par A named vector with the function parameter (see details).
+#' @param timepoints An integer indicating the number of trials (N), or a vector
+#' with N trial numbers (these can have missing values or be fractions) with the
+#' first timepoint having index 0.
+#' If this is an integer, the timepoints at which the exponential will be 
+#' evaluated is: 0, 1 ... N-2, N-1
+#' @return A data frame with two columns: `trial` and `value`, and N rows,
+#' so that each row has the output of the modeled process on each trial.
+#' @description This function is part of a set of functions to fit and
+#' evaluate an exponential decay model with asymptote and offset.
+#' @details The `par` argument is a named numeric vector that should have the
+#' following elements:
+#' - r: rate (of decay/learning)
+#' - s: span (difference between starting point and asymptote)
+#' - o: offset (added to the whole function)
+#' @export
+offsetErrorDecayModel <- function(par, timepoints) {
+  
+  # parameters:
+  # r: decay rate
+  # s: span of the function
+  # o: offset of the 
+  
+  if (length(timepoints) == 1) {
+    timepoints <- c(0:(timepoints-1))
+  }
+  
+  return( data.frame( trial = timepoints, 
+                      value = (((1-par['r'])^timepoints) * par['s']) + par['o'] )
+             )
+  
+}
+
+
+#' @title Get the MSE between offset exponential decay and a time series
+#' @param par A named numeric vector with the model parameters (see details).
+#' @param signal A numeric vector of length N with reach deviations matching
+#' the perturbation schedule.
+#' @param timepoints Either an integer with the number of trials (N) or a vector
+#' with N trial numbers (this can have missing values or fractions). The 
+#' exponential will be evaluated at those timepoints.
+#' @return A float: the mean squared error between the total model output and
+#' the time series.
+#' @description This function is part of a set of functions to fit and
+#' evaluate an offset exponential decay function to a time series.
+#' @details The `par` argument is a named numeric vector that should have the
+#' following elements:
+#' - r: rate (of decay/learning)
+#' - s: span (difference between starting point and asymptote)
+#' - o: offset (added to the whole function)
+#' @export
+offsetErrorDecayMSE <- function(par, signal, timepoints=c(0:(length(signal)-1))) {
+  
+  MSE <- mean((Reach::offsetErrorDecayModel(par, timepoints)$value - signal)^2, na.rm=TRUE)
+  
+  return( MSE )
+  
+}
+
+
+
+#' @title Fit an asymptotic decay model to reach deviations.
+#' @param signal A vector of length N with reach deviation data. These should
+#' start around 0 and go up (ideally they are baselined).
+#' @param timepoints NULL or a vector of length N with the timepoints at which
+#' to evaluate the exponential. If NULL, the N values in `signal` are placed
+#' at: 0, 1, ... N-2, N-1.
+#' @param gridpoints Number of values for rate of change and asymptote, that
+#' are tested in a grid.
+#' @param gridfits Number of best results from gridsearch that are used for
+#' optimizing a fit.
+#' @param spanRange The boundaries for the fit, specifying the minimum and 
+#' maximum difference between the starting value and asympotic level of the 
+#' exponential decay function.
+#' @return A named numeric vector with the optimal parameter that fits an
+#' offset exponential decay function to the given timeseries. It hes these
+#' parameters:
+#' `r`: rate (of decay / learning) of the function
+#' `s`: the span of the function
+#' `o`: offset of the function from zero
+#' The starting point of the function is the offset + span. For any other points
+#' you can run the `offsetErrorDecayModel()` with the time points you're interested
+#' in, as well as the fitted parameters.
+#' @description This function is part of a set of functions to fit and
+#' evaluate an exponential error decay function to reach errors.
+#' @import optimx
+#' @export
+offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11, gridfits=10, spanRange=NULL) {
+  
+  # set the search grid:
+  parvals <- seq(1/gridpoints/2,1-(1/gridpoints/2),1/gridpoints)
+  
+  if (is.null(spanRange)) {
+    # set a wiiiiide range... especially for single participants, the range may or may not work depending on how noisy their data is
+    spanRange <- c(0.5,1.5)*diff(range(signal, na.rm=TRUE))
+  }
+  
+  offsetRange <- c(0,1)*median(signal, na.rm=TRUE) # this can NOT go below 0... 
+  # if the timeseries goes below 0, the error metric is nonsensical
+  
+  
+  searchgrid <- expand.grid('r' = parvals,
+                            's' = parvals * diff(spanRange),
+                            'o' = parvals * diff(offsetRange))
+  lo <- c(0,spanRange[1],offsetRange[1])
+  hi <- c(1,spanRange[2],offsetRange[2])
+  # print(lo)
+  # print(hi)
+  
+  # evaluate starting positions:
+  MSE <- apply(searchgrid, FUN=Reach::offsetErrorDecayMSE, MARGIN=c(1), signal=signal, timepoints=timepoints)
+  
+  # run optimx on the best starting positions:
+  allfits <- do.call("rbind",
+                     apply( data.frame(searchgrid[order(MSE)[1:gridfits],]),
+                            MARGIN=c(1),
+                            FUN=optimx::optimx,
+                            fn=offsetErrorDecayMSE,
+                            method     = 'L-BFGS-B',
+                            lower      = lo,
+                            upper      = hi,
+                            timepoints = timepoints,
+                            signal     = signal
+                            ) )
+  
+  # pick the best fit:
+  win <- allfits[order(allfits$value)[1],]
+  
+  
+  winpar <- unlist(win[1:3])
+
+  # return the best parameters:
+  return(winpar)
+  
+}
+
+
 
 # multi-modal -----
 
