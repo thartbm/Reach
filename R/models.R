@@ -636,7 +636,7 @@ offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11
   
   
   searchgrid <- expand.grid('r' = parvals,
-                            's' = parvals * diff(spanRange),
+                            's' = (parvals * diff(spanRange))+min(spanRange),
                             'o' = parvals * diff(offsetRange))
   lo <- c(0,spanRange[1],offsetRange[1])
   hi <- c(1,spanRange[2],offsetRange[2])
