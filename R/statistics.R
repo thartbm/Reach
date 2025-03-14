@@ -266,6 +266,6 @@ get95CIellipse <- function(df, vars=NULL, conf.level = 0.95) {
     df <- df[, vars]
   }
   
-  return(stats::qnorm(conf.level) * prod(stats::princomp( df )$sdev) * pi)
+  return(prod(stats::qnorm(conf.level) * stats::princomp( df )$sdev) * pi)
   
 }
