@@ -631,7 +631,7 @@ offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11
     spanRange <- c(0.5,1.5)*diff(range(signal, na.rm=TRUE))
   }
   
-  offsetRange <- c(0,1)*median(signal, na.rm=TRUE) # this can NOT go below 0... 
+  offsetRange <- c(0,1)*stats::median(signal, na.rm=TRUE) # this can NOT go below 0... 
   # if the timeseries goes below 0, the error metric is nonsensical
   
   
@@ -699,9 +699,9 @@ multiModalModel <- function(par, x) {
   
   for (nd in c(1:length(m))) {
     
-    probs <- probs + w[nd] * dnorm( x    = x,
-                                    mean = m[nd],
-                                    sd   = s[nd]  )
+    probs <- probs + w[nd] * stats::dnorm(  x    = x,
+                                            mean = m[nd],
+                                            sd   = s[nd]  )
     
   }
   
@@ -772,10 +772,20 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10) {
   
 }
 
-
-multiModalFit <- function(x, n=2, points=9) {
+#' @title Fit function to optimize an N-modal distributions to given data. 
+#' @param x A sequence of numbers to evaluate the probability of.
+#' @param n The number of normal distributions to consider.
+#' @param points The number of points to search in each dimension of a search grid.
+#' @param best Return the parameters for the `best` best fits.
+#' @return The best parameters for N-modal distributions for a data set x.
+#' @description This function is part of a set of functions to fit and
+#' evaluate multi-modal (normal) distribution of data points.
+#' @examples
+#' multiModalFit(x=c(rnorm(50,0,2),rnorm(100,10,4)), n=2, points=7, best=10)
+#' @export
+multiModalFit <- function(x, n=2, points=9, best=9) {
   
-  top <- multiModalGridSearch(x, n, points=points)
+  top <- Reach::multiModalGridSearch(x, n, points=points, best=best)
   
   
   # # add means:
@@ -784,6 +794,8 @@ multiModalFit <- function(x, n=2, points=9) {
   # v[[sprintf('s%d', i)]] <- seq(min(abs(diff(x)))/2, abs(diff(range(x))), length.out=points)
   # # add weights:
   # v[[sprintf('w%d', i)]] <- seq(0.001,0.999,length.out=points)
+  
+  x <- sort(x)
   
   lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.0001), n)
   hi <- rep( c(max(x), abs(diff(range(x))), 0.9999), n)
