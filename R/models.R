@@ -737,7 +737,20 @@ multiModalModelNLL <- function(par, x) {
   
   probs <- multiModalModel(par, x)
   
-  return(-1 * sum(log(probs)))
+  
+  prob[which((prob-1) == 0)] <- 1-.Machine$double.eps
+  y[which(y == 0)] <- .Machine$double.eps
+  
+  
+  nll <- -1 * sum(log(probs))
+  
+  
+  if (!is.finite(nll)) {
+    prob <- rep(.Machine$double.eps, length(x)) # flat function close to zero
+    nll <- -sum(y * log(prob) + (1 - y) * log(1 - prob))
+  }
+  
+  return(nll)
   
 }
 
