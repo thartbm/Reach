@@ -42,6 +42,10 @@ getConfidenceInterval <- function(data, variance = stats::var(data, na.rm=TRUE),
     
     return(c(xbar - z * sdx, xbar + z * sdx))
     
+    # shorter version? seems to give the same output...
+    # CI <- base::sd(v) / base::sqrt(base::length(v)) * base::qt(0.975, df=base::length(v)-1)
+    # return(c(base::mean(v) - CI, base::mean(v) + CI))
+    
   }
   
   # add sample z-distribution?
