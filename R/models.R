@@ -835,12 +835,22 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   
   print(allfits)
   
-  return(allfits)
+  # return(allfits)
+  # 
+  # as.data.frame(uno)[order(unlist(as.data.frame(uno)$value))[1],]
+  
+  allfits <- as.data.frame(allfits)
+  
+  print(allfits)
   
   # pick the best fit:
-  win <- allfits[order(allfits$value)[1],]
+  win <- allfits[unlist(order(allfits$value))[1],]
+  
+  print(win)
   
   winpar <- unlist(win[1:(3*n)])
+  
+  print(winpar)
   
   # outpar <- list('m'=c(), 's'=c(), 'w'=c())
   # for (pidx in c(1:3)) {
