@@ -848,7 +848,7 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   
   print(win)
   
-  winpar <- unlist(win[1:(3*n)])
+  winpar <- unlist(as.vector(win)[1:(3*n)])
   
   print(winpar)
   
@@ -858,6 +858,9 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   #     outpar[[ c('m', 's', 'w')[pidx] ]].append( winpar[((midx-1)*3)+pidx] )
   #   }
   # }
+  
+  # one-liner from likelihood fuction:
+  # bpar <- data.frame(matrix(par,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
   
   # return the best parameters:
   return(winpar)
