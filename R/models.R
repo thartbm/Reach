@@ -680,7 +680,14 @@ offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11
 #' @return A vector of probabilities according to the multi modal normal distribution.
 #' @description This function is part of a set of functions to fit and
 #' evaluate multi modal (normal) distribution of data points.
-#' @details The `par` argument is a data frame (or named list) with columns:
+#' @details This is an experimental work-in-progress model that is supposed to fit a
+#' multi-modal distribution. That is: I'm not sure how well it works, and its' a 
+#' little rough around the edges. For one, the output parameters from the optimal 
+#' fit are in a different format from what the other functions expect. Second, the 
+#' output is usually not a probability function that sums to 1. Finally, it might 
+#' not return the actual best fit.
+#' 
+#' That said, the `par` argument is a data frame (or named list) with columns:
 #' - m: mean
 #' - s: standard deviation
 #' - w: weight
@@ -705,7 +712,7 @@ multiModalModel <- function(par, x) {
     
   }
   
-  return(probs) # this is not a prediction, but a likelihood for each of the points in X already
+  return(probs) # this is the sum likelihood of each x, given par
   
 }
 
@@ -808,7 +815,7 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
                             MARGIN=c(1),
                             FUN=optimx::optimx,
                             fn=multiModalModelNLL,
-                            method     = 'nlminb',
+                            method     = 'L-BFGS-B', # get rid of warnings?
                             lower      = lo,
                             upper      = hi,
                             control    = control,
@@ -821,8 +828,15 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   
   winpar <- unlist(win[1:(3*n)])
   
+  outpar <- list()
+  for (midx in c(1:3)) {
+    values <- winpar[(c(0:(n-1))*3)+(midx)]
+    values <- unname(values)
+    outpar[[c('m', 's', 'w')[midx]]] <- values
+  }
+  
   # return the best parameters:
-  return(winpar)
+  return(outpar)
   
 }
 
