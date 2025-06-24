@@ -784,6 +784,8 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10) {
 #' multiModalFit(x=c(rnorm(50,0,2),rnorm(100,10,4)), n=2, points=7, best=10)
 #' @export
 multiModalFit <- function(x, n=2, points=9, best=9) {
+
+  x <- sort(x)
   
   top <- Reach::multiModalGridSearch(x, n, points=points, best=best)
   
@@ -795,8 +797,7 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   # # add weights:
   # v[[sprintf('w%d', i)]] <- seq(0.001,0.999,length.out=points)
   
-  x <- sort(x)
-  
+
   lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.0001), n)
   hi <- rep( c(max(x), abs(diff(range(x))), 0.9999), n)
   
