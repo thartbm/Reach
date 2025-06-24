@@ -844,7 +844,7 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   print(allfits)
   
   # pick the best fit:
-  win <- allfits[unlist(order(allfits$value))[1],]
+  win <- allfits[order(unlist(allfits$value))[1],]
   
   print(win)
   
