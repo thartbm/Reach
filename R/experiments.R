@@ -63,7 +63,7 @@ generateRandomIDs <- function(checkFile='randomIDs.csv', IDlength=3, number=100,
   
   # check if target file exists, read contents if true
   if (file.exists(addToFile)) {
-    existingList <- read.csv(addToFile, stringsAsFactors=F)
+    existingList <- utils::read.csv(addToFile, stringsAsFactors=F)
   } else {
     existingList <- data.frame('randomIDs'=c())
   }
