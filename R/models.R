@@ -848,7 +848,7 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   
   print(win)
   
-  winpar <- unlist(as.vector(win)[1:(3*n)])
+  winpar <- as.vector(unlist(win)[1:(3*n)])
   
   print(winpar)
   
