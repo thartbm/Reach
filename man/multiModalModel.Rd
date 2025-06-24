@@ -19,7 +19,14 @@ This function is part of a set of functions to fit and
 evaluate multi modal (normal) distribution of data points.
 }
 \details{
-The `par` argument is a data frame (or named list) with columns:
+This is an experimental work-in-progress model that is supposed to fit a
+multi-modal distribution. That is: I'm not sure how well it works, and its' a 
+little rough around the edges. For one, the output parameters from the optimal 
+fit are in a different format from what the other functions expect. Second, the 
+output is usually not a probability function that sums to 1. Finally, it might 
+not return the actual best fit.
+
+That said, the `par` argument is a data frame (or named list) with columns:
 - m: mean
 - s: standard deviation
 - w: weight
