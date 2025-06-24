@@ -737,13 +737,9 @@ multiModalModelNLL <- function(par, x) {
   
   probs <- multiModalModel(par, x)
   
-  
   probs[which((probs-1) == 0)] <- .Machine$double.eps
 
-  
-  
   nll <- -1 * sum(log(probs))
-  
   
   if (!is.finite(nll)) {
     nll <- -1 * sum(log(rep(.Machine$double.eps, length(x)))) # minimum probability
@@ -822,7 +818,8 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   
   print(data.frame(lo,hi))
   
-  control <- list('maximize'=FALSE)
+  # control <- list('maximize'=FALSE) # optimx
+  control <- list() # optim
   # run optimx on the best starting positions:
   allfits <- do.call("rbind",
                      apply( top,
