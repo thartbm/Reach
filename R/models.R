@@ -739,6 +739,7 @@ multiModalModelNLL <- function(par, x) {
   
   
   probs[which((probs-1) == 0)] <- .Machine$double.eps
+
   
   
   nll <- -1 * sum(log(probs))
