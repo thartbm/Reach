@@ -721,7 +721,7 @@ multiModalModel <- function(par, x) {
 #' - w: weight
 #' for every normal distribution of the model
 #' @export
-multiModalModelLikelihood <- function(par, x) {
+multiModalModelNLL <- function(par, x) {
   
   n = length(par)/3
   # print(list(c(1:n),c('m','s','w')))
@@ -730,7 +730,7 @@ multiModalModelLikelihood <- function(par, x) {
   
   probs <- multiModalModel(par, x)
   
-  return(sum(log(probs)))
+  return(-1 * sum(log(probs)))
   
 }
 
@@ -762,10 +762,10 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10) {
   df_grid <- expand.grid(v)
   
   # get all the likelihoods:
-  likelihoods <- apply(X=df_grid, MARGIN=c(1), FUN=multiModalModelLikelihood, x=x)
+  likelihoods <- apply(X=df_grid, MARGIN=c(1), FUN=multiModalModelNLL, x=x)
   
   # indexes of the best ones:
-  idx <- rev(order(unlist(likelihoods)))[1:best]
+  idx <- order(unlist(likelihoods))[1:best]
   
   # return the best parameter sets:
   return(df_grid[idx,])
@@ -800,13 +800,13 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.0001), n)
   hi <- rep( c(max(x), abs(diff(range(x))), 0.9999), n)
   
-  control <- list('maximize'=TRUE)
+  control <- list('maximize'=FALSE)
   # run optimx on the best starting positions:
   allfits <- do.call("rbind",
                      apply( top,
                             MARGIN=c(1),
                             FUN=optimx::optimx,
-                            fn=multiModalModelLikelihood,
+                            fn=multiModalModelNLL,
                             method     = 'nlminb',
                             lower      = lo,
                             upper      = hi,
