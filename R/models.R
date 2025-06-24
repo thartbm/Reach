@@ -828,15 +828,15 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   
   winpar <- unlist(win[1:(3*n)])
   
-  outpar <- list()
-  for (midx in c(1:3)) {
-    values <- winpar[(c(0:(n-1))*3)+(midx)]
-    values <- unname(values)
-    outpar[[c('m', 's', 'w')[midx]]] <- values
-  }
+  # outpar <- list('m'=c(), 's'=c(), 'w'=c())
+  # for (pidx in c(1:3)) {
+  #   for (midx in c(1:n)) {
+  #     outpar[[ c('m', 's', 'w')[pidx] ]].append( winpar[((midx-1)*3)+pidx] )
+  #   }
+  # }
   
   # return the best parameters:
-  return(outpar)
+  return(winpar)
   
 }
 
