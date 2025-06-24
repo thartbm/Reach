@@ -737,7 +737,18 @@ multiModalModelNLL <- function(par, x) {
   
   probs <- multiModalModel(par, x)
   
-  return(-1 * sum(log(probs)))
+  
+  probs[which((probs-1) == 0)] <- .Machine$double.eps
+  
+  
+  nll <- -1 * sum(log(probs))
+  
+  
+  if (!is.finite(nll)) {
+    nll <- -1 * sum(log(rep(.Machine$double.eps, length(x)))) # minimum probability
+  }
+  
+  return(nll)
   
 }
 
