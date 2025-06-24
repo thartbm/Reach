@@ -808,12 +808,15 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.0001), n)
   hi <- rep( c(max(x), abs(diff(range(x))), 0.9999), n)
   
+  print(data.frame(lo,hi))
+  
   control <- list('maximize'=FALSE)
   # run optimx on the best starting positions:
   allfits <- do.call("rbind",
                      apply( top,
                             MARGIN=c(1),
-                            FUN=optimx::optimx,
+                            # FUN=optimx::optimx,
+                            FUN = stats::optim,
                             fn=multiModalModelNLL,
                             method     = 'L-BFGS-B', # get rid of warnings?
                             lower      = lo,
