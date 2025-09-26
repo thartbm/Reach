@@ -17,6 +17,6 @@ Depends:
   openssl (>= 2.0.6)
 Imports:
   stats,
-  graphics,
   grDevices,
-  utils
+  utils,
+  svglite
