@@ -123,11 +123,98 @@ colorAlpha <- function(col, alpha = 34) {
   
   ## Make new color using input color as base and alpha set by transparency
   t.col <- grDevices::rgb( rgb.val,
-                           alpha = alpha,
-                           max   = 255)
+                           alpha         = alpha,
+                           maxColorValue = 255)
   
   names(t.col) <- colornames
   
   return(t.col)
   
 }
+
+#' @title Get colors that are commonly used in the lab
+#' @return A list of two vectors of colors. The list has two elements:
+#' `op` and `tr`. `op` contains opaque colors, `tr` contains the same colors but
+#' with transparency (alpha = 32).
+#' @description This function returns a list of two vectors of colors.
+#' The list has two elements:
+#' `op` and `tr`. `op` contains opaque colors, `tr` contains the same colors but
+#' with transparency (alpha = 32). These colors are commonly used in the lab for
+#' figures on posters and in papers. The second color is a red, which is taken 
+#' from the York logo. The colors are sorted from most to least bright.
+#' @export
+getColors <- function() {
+  
+  cols.op <- c(rgb(255, 147, 41,  255, maxColorValue = 255), # orange:  21, 255, 148
+               rgb(229, 22,  54,  255, maxColorValue = 255), # red:    248, 210, 126
+               rgb(207, 0,   216, 255, maxColorValue = 255), # pink:   211, 255, 108
+               rgb(127, 0,   216, 255, maxColorValue = 255), # violet: 195, 255, 108
+               rgb(0,   19,  136, 255, maxColorValue = 255)) # blue:   164, 255, 68
+  
+  cols.tr <- c(rgb(255, 147, 41,  32,  maxColorValue = 255), # orange:  21, 255, 148
+               rgb(229, 22,  54,  32,  maxColorValue = 255), # red:    248, 210, 126
+               rgb(207, 0,   216, 32,  maxColorValue = 255), # pink:   211, 255, 108
+               rgb(127, 0,   216, 32,  maxColorValue = 255), # violet: 195, 255, 108
+               rgb(0,   19,  136, 32,  maxColorValue = 255)) # blue:   164, 255, 68
+  
+  cols <- list()
+  cols$op <- cols.op
+  cols$tr <- cols.tr
+  
+  return(cols)
+  
+}
+
+# figure output -----
+
+#' @title Set up a graphics device for saving figures
+#' @param target The type of file to create. One of 'pdf', 'svg', 'png', 'tiff'
+#' or 'inline'. Default is 'inline', which does not open a file, but leaves use
+#' to the default device (e.g. RStudio plot pane).
+#' @param width Width of the figure in inches. Default is 8.
+#' @param height Height of the figure in inches. Default is 6.
+#' @param dpi Dots per inch (resolution) for raster formats (png, tiff). Default is 300.
+#' @param filename The name of the file to create, including the path. Required if 
+#' target is not 'inline'.
+#' @return Does not return a value.
+#' @description Boiler plate code to set up a graphics device for saving figures.
+#' The function does nothing is the target is not one of the 4 file formats allowed,
+#' such that the it can be both used for creating publication quality files and to
+#' plot to interactive graphics devices (i.e. on the screen).
+#' @importFrom grDevices png pdf tiff rgb
+#' @importFrom svglite svglite
+#' @export
+setupFigureFile <- function(target='inline',width=8,height=6,dpi=300,filename) {
+  
+  if (target == 'pdf') {
+    grDevices::pdf(file    = filename, 
+                    width  = width, 
+                    height = height)
+  }
+  if (target == 'svg') {
+    svglite::svglite( filename = filename,
+                      width = width,
+                      height = height,
+                      fix_text_size = FALSE) 
+    # fix_text_size messes up figures on my machine... 
+    # maybe it's better on yours?
+  }
+  if (target == 'png') {
+    grDevices::png(  filename = filename,
+                     width = width*dpi,
+                     height = height*dpi,
+                     res = dpi
+    )
+  }
+  if (target == 'tiff') {
+    grDevices::tiff(  filename = filename,
+                      compression = 'lzw',
+                      width = width*dpi,
+                      height = height*dpi,
+                      res = dpi
+    )
+  }
+}
+
+
+
