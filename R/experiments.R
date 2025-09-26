@@ -17,6 +17,7 @@
 #' of number, but when read in with most kinds of software, they work OK.
 #' @examples
 #' generateRandomIDs()
+#' @importFrom openssl rand_bytes
 #' @export
 generateRandomIDs <- function(checkFile='randomIDs.csv', IDlength=3, number=100, addToFile=checkFile) {
   # This function generates a NUMBER of random IDs of length IDlength * 2, and 
