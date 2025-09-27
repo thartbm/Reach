@@ -186,6 +186,8 @@ getColors <- function() {
 #' @export
 setupFigureFile <- function(target='inline',width=8,height=6,dpi=300,filename) {
   
+  filename <- sprintf('%s.%s', filename, target)
+  
   if (target == 'pdf') {
     grDevices::pdf(file    = filename, 
                     width  = width, 
