@@ -443,7 +443,7 @@ exponentialMSE <- function(par, signal, timepoints=c(0:(length(signal)-1)), mode
 #' @param gridfits Number of best results from gridsearch that are used for
 #' optimizing a fit.
 #' @param setN0 NULL or number, if the asymptote is known, it can be set here.
-#' @param asymptoteRange NULL or a vector specifying the upper and lower bound for
+#' @param asymptoteRange NULL or a vector specifying the lower and upper bound for
 #' the asymptote (N0). If NULL, the range will be (-1,2) * max(signal) which may be 
 #' too wide for very noisy data.
 #' @return A named numeric vector with the optimal parameter that fits a simple
