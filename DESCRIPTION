@@ -1,7 +1,7 @@
 Package: Reach
 Type: Package
 Title: Download and analyse 2D reaching and hand localization data
-Version: 2025.09.26
+Version: 2026.02.05
 Authors@R: c(person("B. Marius", "'t Hart", email = "thartbm@gmail.com",
                   role = c("aut", "cre")),
              person("Denise Y.P.", "Henriques", email = "deniseh@yorku.ca", role = "aut"))
