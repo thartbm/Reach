@@ -273,3 +273,66 @@ get95CIellipse <- function(df, vars=NULL, conf.level = 0.95) {
   return(prod(stats::qnorm(conf.level) * stats::princomp( df )$sdev) * pi)
   
 }
+
+#' @title Calculate d-prime and related measures from signal detection data.
+#' @param X A data frame with two columns: first column with signal present (1)
+#' or absent (0), second column with response yes (1) or no (0).
+#' @param hits Number of hits.
+#' @param misses Number of misses.
+#' @param fas Number of false alarms.
+#' @param crs Number of correct rejections.
+#' @param hautus Boolean: use Hautus correction for extreme values (default: FALSE).
+#' @return A list with d-prime, beta, c, sensitivity and specificity.
+#' @description Calculate d-prime and related measures from signal detection data.
+#' @details This function calculates d-prime, beta, c, sensitivity and specificity
+#' from counts of hits, misses, false alarms and correct rejections.
+#' It can also apply the Hautus correction for extreme values (0 or 1 rates).
+#' If X is provided as a data frame, the counts are calculated from that, and the 
+#' other four parameters are ignored.
+#' @examples
+#' #' results <- dprime(hits=45, misses=5, fas=15, crs=35, hautus=TRUE)
+#' #' print(results)
+#' @export
+dprime <- function(X, hits=NULL, misses=NULL, fas=NULL, crs=NULL, hautus=FALSE) {
+  
+  if (!is.null(X)) {
+    
+    hits <- length(which(X[,c(1)] == 1 & X[,c(2)] == 1))
+    misses <- length(which(X[,c(1)] == 1 & X[,c(2)] == 0))
+    fas <- length(which(X[,c(1)] == 0 & X[,c(2)] == 1))
+    crs <- length(which(X[,c(1)] == 0 & X[,c(2)] == 0))
+    
+  } else {
+    if (is.null(hits) | is.null(misses) | is.null(fas) | is.null(crs)) {
+      stop("Either provide X as a data frame, or all four counts separately.")
+    }
+  }
+  
+  if (hautus) {
+    
+    hits   <- hits   + 0.5
+    misses <- misses + 0.5
+    fas    <- fas    + 0.5
+    crs    <- crs    + 0.5
+    
+  } 
+  
+  # get rates
+  hit_rate <- hits / (hits + misses)
+  fa_rate  <- fas  / (fas  + crs)
+  specificity <- (crs) / (crs  + misses)
+  
+  # second steps
+  Zhr    <- qnorm(hit_rate)
+  Zfr    <- qnorm(fa_rate)
+  dprime <- Zhr - Zfr
+  beta   <- exp(-Zhr * Zhr/2 + Zfr * Zfr/2)
+  c      <- -(Zhr + Zfr)/2
+  
+  return( list( 'dprime'      = dprime,
+                'beta'        = beta,
+                'c'           = c,         
+                'sensitivity' = hit_rate,
+                'specificity' = specificity ) )
+  
+}
