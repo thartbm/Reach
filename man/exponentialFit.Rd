@@ -35,7 +35,7 @@ optimizing a fit.}
 
 \item{setN0}{NULL or number, if the asymptote is known, it can be set here.}
 
-\item{asymptoteRange}{NULL or a vector specifying the upper and lower bound for
+\item{asymptoteRange}{NULL or a vector specifying the lower and upper bound for
 the asymptote (N0). If NULL, the range will be (-1,2) * max(signal) which may be 
 too wide for very noisy data.}
 }
