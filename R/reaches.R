@@ -373,3 +373,46 @@ getSplinedVelocity <- function(x, y, t, spar=0.01) {
   return(data.frame('velocity'=V, 'time'=ST$t))
   
 }
+
+# timecourses =====
+
+
+#' @title Find index where a timecourse stabilizes using the width of the 95`%` CI.
+#' @param timecourse A vector of values of length>minn representing a timecourse.
+#' @param minn Minimum number of samples to consider for stabilization (default: 10).
+#' @return Index of the sample where the timecourse stabilizes.
+#' @description Index where a timecourse stabilizes as determined by the minimum width
+#' of the 95`%` confidence interval of the mean from each trial up to the end of the timecourse.
+#' @details This function implements a method from this paper:
+#' https://doi.org/10.1371/journal.pcbi.1006501
+#' It uses the minimum width of a 95`%` confidence interval of the mean across a decreasing
+#' window. Starting at 1-n, 2-n, 3-n, ..., minn-n, the function calculates the width of
+#' the 95`%` confidence interval of the mean for each window. The index of the minimum width
+#' is returned as the point where the timecourse stabilizes.
+#' 
+#' This works reasonably well (see paper linked above) and is independent of any model
+#' of learning or adaptation.
+#' @examples
+#' #
+#' @export
+findStabilizationTrial <- function(timecourse, minn=10) {
+  
+  CI_widths <- c() 
+  
+  for (i in 1:(base::length(timecourse)-minn)) {
+    
+    # calculate the robust mean and CI for the current segment of the timecourse
+    segment <- timecourse[i:base::length(timecourse)]
+    robust_mean <- stats::median(segment)
+    mad <- stats::mad(segment)
+    n <- base::length(segment)
+    ci_lower <- robust_mean - 1.96 * (stats::mad / base::sqrt(n))
+    ci_upper <- robust_mean + 1.96 * (stats::mad / base::sqrt(n))
+    
+    CI_widths <- c(CI_widths, ci_upper - ci_lower)
+  }
+  
+  # minimum CI width indicates stabilization:
+  return(base::which.min(CI_widths))
+  
+}

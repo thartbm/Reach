@@ -323,10 +323,10 @@ dprime <- function(X, hits=NULL, misses=NULL, fas=NULL, crs=NULL, hautus=FALSE) 
   specificity <- (crs) / (crs  + misses)
   
   # second steps
-  Zhr    <- qnorm(hit_rate)
-  Zfr    <- qnorm(fa_rate)
+  Zhr    <- stats::qnorm(hit_rate)
+  Zfr    <- stats::qnorm(fa_rate)
   dprime <- Zhr - Zfr
-  beta   <- exp(-Zhr * Zhr/2 + Zfr * Zfr/2)
+  beta   <- base::exp(-Zhr * Zhr/2 + Zfr * Zfr/2)
   c      <- -(Zhr + Zfr)/2
   
   return( list( 'dprime'      = dprime,
