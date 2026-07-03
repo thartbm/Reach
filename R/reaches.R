@@ -438,6 +438,6 @@ findStabilizationTrial <- function(timecourse, minn=10, na.rm=TRUE) {
   }
   
   # minimum CI width indicates stabilization:
-  return(base::which.min(CI_widths))
+  return(base::which.min(CI_widths)+1)
   
 }
