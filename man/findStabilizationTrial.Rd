@@ -4,12 +4,14 @@
 \alias{findStabilizationTrial}
 \title{Find index where a timecourse stabilizes using the width of the 95\% CI.}
 \usage{
-findStabilizationTrial(timecourse, minn = 10)
+findStabilizationTrial(timecourse, minn = 10, na.rm = TRUE)
 }
 \arguments{
 \item{timecourse}{A vector of values of length>minn representing a timecourse.}
 
 \item{minn}{Minimum number of samples to consider for stabilization (default: 10).}
+
+\item{na.rm}{Logical, whether to remove NA values (default: TRUE).}
 }
 \value{
 Index of the sample where the timecourse stabilizes.
@@ -30,5 +32,25 @@ This works reasonably well (see paper linked above) and is independent of any mo
 of learning or adaptation.
 }
 \examples{
-#
+# there is example data in this package:
+data("tworatedata")
+
+# first we baseline it, and get a median for every trial:
+baseline <- function(reachvector,blidx) reachvector - mean(reachvector[blidx], na.rm=TRUE)
+tworatedata[,4:ncol(tworatedata)] <- apply(tworatedata[,4:ncol(tworatedata)], 
+                                           FUN=baseline, 
+                                           MARGIN=c(2), 
+                                           blidx=c(17:32))
+                                           
+# then we only take the rotated phase:
+tworatedata <- tworatedata[which(tworatedata$schedule == -30),]                                            
+
+# and plot the first 6 participants as examples:
+layout(matrix(c(1,2,3,4,5,6), nrow=3, ncol=2, byrow=TRUE))
+for (ppidx in c(4:9)) {
+  ppdata <- tworatedata[,ppidx]
+  index <- findStabilizationTrial(ppdata, minn=10, na.rm=TRUE)
+  plot(ppdata[c(1:index)], type='l', main=colnames(tworatedata)[ppidx], col='red', xlim=c(0,101), ylim=c(-10,40), xlab='trial',ylab='deviation [deg]')
+  lines(c(index:length(ppdata)), ppdata[c(index:length(ppdata))], col='blue')
+}
 }

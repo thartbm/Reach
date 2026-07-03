@@ -380,6 +380,7 @@ getSplinedVelocity <- function(x, y, t, spar=0.01) {
 #' @title Find index where a timecourse stabilizes using the width of the 95\% CI.
 #' @param timecourse A vector of values of length>minn representing a timecourse.
 #' @param minn Minimum number of samples to consider for stabilization (default: 10).
+#' @param na.rm Logical, whether to remove NA values (default: TRUE).
 #' @return Index of the sample where the timecourse stabilizes.
 #' @description Index where a timecourse stabilizes as determined by the minimum width
 #' of the 95\% confidence interval of the mean from each trial up to the end of the timecourse.
@@ -393,23 +394,47 @@ getSplinedVelocity <- function(x, y, t, spar=0.01) {
 #' This works reasonably well (see paper linked above) and is independent of any model
 #' of learning or adaptation.
 #' @examples
-#' #
+#' # there is example data in this package:
+#' data("tworatedata")
+#' 
+#' # first we baseline it, and get a median for every trial:
+#' baseline <- function(reachvector,blidx) reachvector - mean(reachvector[blidx], na.rm=TRUE)
+#' tworatedata[,4:ncol(tworatedata)] <- apply(tworatedata[,4:ncol(tworatedata)], 
+#'                                            FUN=baseline, 
+#'                                            MARGIN=c(2), 
+#'                                            blidx=c(17:32))
+#'                                            
+#' # then we only take the rotated phase:
+#' tworatedata <- tworatedata[which(tworatedata$schedule == -30),]                                            
+#'
+#' # and plot the first 6 participants as examples:
+#' layout(matrix(c(1,2,3,4,5,6), nrow=3, ncol=2, byrow=TRUE))
+#' for (ppidx in c(4:9)) {
+#'   ppdata <- tworatedata[,ppidx]
+#'   index <- findStabilizationTrial(ppdata, minn=10, na.rm=TRUE)
+#'   plot(ppdata[c(1:index)], type='l', main=colnames(tworatedata)[ppidx], col='red', xlim=c(0,101), ylim=c(-10,40), xlab='trial',ylab='deviation [deg]')
+#'   lines(c(index:length(ppdata)), ppdata[c(index:length(ppdata))], col='blue')
+#' }
 #' @export
-findStabilizationTrial <- function(timecourse, minn=10) {
+findStabilizationTrial <- function(timecourse, minn=10, na.rm=TRUE) {
   
   CI_widths <- c() 
   
-  for (i in 1:(base::length(timecourse)-minn)) {
+  for (i in 1:(length(timecourse)-minn)) {
     
     # calculate the robust mean and CI for the current segment of the timecourse
-    segment <- timecourse[i:base::length(timecourse)]
-    robust_mean <- stats::median(segment)
-    mad <- stats::mad(segment)
-    n <- base::length(segment)
-    ci_lower <- robust_mean - 1.96 * (stats::mad / base::sqrt(n))
-    ci_upper <- robust_mean + 1.96 * (stats::mad / base::sqrt(n))
+    segment <- timecourse[i:length(timecourse)]
+    # robust_mean <- stats::median(segment, na.rm=na.rm)
+    smad <- stats::mad(segment, na.rm=na.rm)
+    sqrt_n <- sqrt(length(segment))
     
-    CI_widths <- c(CI_widths, ci_upper - ci_lower)
+    
+    # ci_lower <- robust_mean - 1.96 * (stats::mad / sqrt_n)
+    # ci_upper <- robust_mean + 1.96 * (stats::mad / sqrt_n)
+    
+    CI_width <- 2 * (stats::qnorm(0.975) * (smad / sqrt_n))
+    
+    CI_widths <- c(CI_widths, CI_width)
   }
   
   # minimum CI width indicates stabilization:
