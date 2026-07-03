@@ -827,6 +827,7 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
 #' points(x, rep(-.005,length(x)), pch=20, col='#99999933', cex=2)
 #' fitdist <- multiModalModel(par, xd$x)
 #' lines(xd$x, fitdist, col='red', lwd=2)
+#' lines(xd$x, dnorm(xd$x, 0, 2)+dnorm(xd$x, 10, 4), col='black', lty=3)
 #' @export
 multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   
