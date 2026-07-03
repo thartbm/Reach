@@ -2,7 +2,7 @@
 % Please edit documentation in R/reaches.R
 \name{findStabilizationTrial}
 \alias{findStabilizationTrial}
-\title{Find index where a timecourse stabilizes using the width of the 95`%` CI.}
+\title{Find index where a timecourse stabilizes using the width of the 95\% CI.}
 \usage{
 findStabilizationTrial(timecourse, minn = 10)
 }
@@ -16,14 +16,14 @@ Index of the sample where the timecourse stabilizes.
 }
 \description{
 Index where a timecourse stabilizes as determined by the minimum width
-of the 95`%` confidence interval of the mean from each trial up to the end of the timecourse.
+of the 95\% confidence interval of the mean from each trial up to the end of the timecourse.
 }
 \details{
 This function implements a method from this paper:
 https://doi.org/10.1371/journal.pcbi.1006501
-It uses the minimum width of a 95`%` confidence interval of the mean across a decreasing
+It uses the minimum width of the 95\% confidence intervals of the mean across a decreasing
 window. Starting at 1-n, 2-n, 3-n, ..., minn-n, the function calculates the width of
-the 95`%` confidence interval of the mean for each window. The index of the minimum width
+the 95\% confidence interval of the mean for each window. The index of the minimum width
 is returned as the point where the timecourse stabilizes.
 
 This works reasonably well (see paper linked above) and is independent of any model
