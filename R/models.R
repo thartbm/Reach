@@ -693,7 +693,7 @@ offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11
 #' - w: weight
 #' for every normal distribution of the model
 #' @export
-multiModalModel <- function(par, x, fixed) {
+multiModalModel <- function(par, x, fixed=NULL) {
   
   probs <- rep(0, length(x))
   
@@ -701,18 +701,20 @@ multiModalModel <- function(par, x, fixed) {
   s <- par$s # standard deviations
   w <- par$w # weights
   
-  mf <- fixed$m
-  sf <- fixed$s
-  wf <- fixed$w
-  for (i in c(1:length(m))) {
-    if (!is.null(mf[i])) {
-      m[i] <- mf[i]
-    }
-    if (!is.null(sf[i])) {
-      s[i] <- sf[i]
-    }
-    if (!is.null(wf[i])) {
-      w[i] <- wf[i]
+  if (!is.null(fixed)) {
+    mf <- fixed$m
+    sf <- fixed$s
+    wf <- fixed$w
+    for (i in c(1:length(m))) {
+      if (!is.null(mf[i])) {
+        m[i] <- mf[i]
+      }
+      if (!is.null(sf[i])) {
+        s[i] <- sf[i]
+      }
+      if (!is.null(wf[i])) {
+        w[i] <- wf[i]
+      }
     }
   }
   
@@ -821,8 +823,8 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
 #' x=c(rnorm(50,0,2),rnorm(100,10,4))
 #' par <- multiModalFit(x=x, n=2, points=7, best=10)
 #' xd <- density(x, from=-5, to=15, n=201)
-#' plot(xd$x, xd$y, main='Multi-modal fit', xlab='x', ylab='Density', ylim=c(-.15,.5), col='blue', type='l')
-#' points(x, rep(-.1,length(x)), pch=20, col='gray')
+#' plot(xd$x, xd$y, main='Multi-modal fit', xlab='x', ylab='Density', ylim=c(-.05,.1), col='blue', type='l')
+#' points(x, rep(-.05,length(x)), pch=20, col='gray')
 #' fitdist <- multiModalModel(par, xd$x)
 #' lines(xd$x, fitdist, col='red', lwd=2)
 #' @export
