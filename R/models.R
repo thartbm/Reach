@@ -840,6 +840,7 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
       fixed[[sprintf('s%d', i)]] <- NULL
       fixed[[sprintf('w%d', i)]] <- NULL
     }
+    fixed <- data.frame(matrix(fixed,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
   }
   
   top <- Reach::multiModalGridSearch(x, n, points=points, best=best, fixed=fixed)
@@ -871,7 +872,8 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
                             lower      = lo,
                             upper      = hi,
                             control    = control,
-                            x          = x) )
+                            x          = x,
+                            fixed      = fixed) )
   
   # convert to data frame:
   allfits <- as.data.frame(allfits)
@@ -889,8 +891,8 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   # convert to data frame (as in likelihood function, and as expected by the model function):
   dfpar <- data.frame(matrix(winpar,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
   
-  # print(fixed)
-  # print(fixed$m)
+  print(fixed)
+  
   for (i in c(1:n)) {
     # print(i)
     if (!is.null(fixed$m[i])) {
@@ -900,7 +902,7 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
       dfpar$s[i] <- fixed$s[i]
     }
     if (!is.null(fixed$w[i])) {
-      dfpar$w[i] <- fixed$w[[i]]
+      dfpar$w[i] <- fixed$w[i]
     }
   }
   
