@@ -889,14 +889,17 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   # convert to data frame (as in likelihood function, and as expected by the model function):
   dfpar <- data.frame(matrix(winpar,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
   
+  # print(fixed)
+  # print(fixed$m)
   for (i in c(1:n)) {
-    if (!is.null(fixed$m[[i]])) {
-      dfpar$m[i] <- fixed$m[[i]]
+    # print(i)
+    if (!is.null(fixed$m[i])) {
+      dfpar$m[i] <- fixed$m[i]
     }
-    if (!is.null(fixed$s[[i]])) {
-      dfpar$s[i] <- fixed$s[[i]]
+    if (!is.null(fixed$s[i])) {
+      dfpar$s[i] <- fixed$s[i]
     }
-    if (!is.null(fixed$w[[i]])) {
+    if (!is.null(fixed$w[i])) {
       dfpar$w[i] <- fixed$w[[i]]
     }
   }
