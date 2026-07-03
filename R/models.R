@@ -792,7 +792,7 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
     # add standard deviations:
     v[[sprintf('s%d', i)]] <- seq(min(abs(diff(x)))/2, abs(diff(range(x))), length.out=points)
     # add weights:
-    v[[sprintf('w%d', i)]] <- seq(0.001,0.999,length.out=points)
+    v[[sprintf('w%d', i)]] <- seq(0.02,0.98,length.out=points)
   }
 
   df_grid <- expand.grid(v)
@@ -842,7 +842,7 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
     }
   }
   
-  top <- Reach::multiModalGridSearch(x, n, points=points, best=best)
+  top <- Reach::multiModalGridSearch(x, n, points=points, best=best, fixed=fixed)
   
   
   # # add means:
@@ -853,8 +853,8 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   # v[[sprintf('w%d', i)]] <- seq(0.001,0.999,length.out=points)
   
 
-  lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.0001), n)
-  hi <- rep( c(max(x), abs(diff(range(x))), 0.9999), n)
+  lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.02), n)
+  hi <- rep( c(max(x), abs(diff(range(x))), 0.98), n)
   
   # print(data.frame(lo,hi))
   
@@ -885,6 +885,21 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   winpar <- as.numeric(unlist(win)[1:(3*n)])
   
   print(winpar)
+  
+  for (i in c(1:n)) {
+    if (!is.null(fixed$m[[i]])) {
+      winpar$m[i] <- fixed$m[[i]]
+    }
+    if (!is.null(fixed$s[[i]])) {
+      winpar$s[i] <- fixed$s[[i]]
+    }
+    if (!is.null(fixed$w[[i]])) {
+      winpar$w[i] <- fixed$w[[i]]
+    }
+  }
+  
+  winpar$w <- winpar$w / sum(winpar$w) # normalize weights to sum to 1
+  
   
   # convert to data frame (as in likelihood function, and as expected by the model function):
   dfpar <- data.frame(matrix(winpar,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
