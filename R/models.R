@@ -792,7 +792,7 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
     # add standard deviations:
     v[[sprintf('s%d', i)]] <- seq(min(abs(diff(x)))/2, abs(diff(range(x))), length.out=points)
     # add weights:
-    v[[sprintf('w%d', i)]] <- seq(0.025,0.975,length.out=points)
+    v[[sprintf('w%d', i)]] <- seq(0.05,0.95,length.out=points)
   }
 
   df_grid <- expand.grid(v)
@@ -855,8 +855,8 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   
 
 
-  lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.025), n)
-  hi <- rep( c(max(x), abs(diff(range(x))), 0.975), n)
+  lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.01), n)
+  hi <- rep( c(max(x), abs(diff(range(x))), 0.99), n)
 
   # print(data.frame(lo,hi))
   
