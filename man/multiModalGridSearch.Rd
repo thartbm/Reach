@@ -4,7 +4,7 @@
 \alias{multiModalGridSearch}
 \title{Grid search to find likely N-modal distributions parameters given data.}
 \usage{
-multiModalGridSearch(x, n = 2, points = 7, best = 10)
+multiModalGridSearch(x, n = 2, points = 7, best = 10, fixed = NULL)
 }
 \arguments{
 \item{x}{A sequence of numbers to evaluate the probability of.}
@@ -14,6 +14,10 @@ multiModalGridSearch(x, n = 2, points = 7, best = 10)
 \item{points}{The number of points to search in each dimension of the search grid.}
 
 \item{best}{Return the parameters for the `best` best fits.}
+
+\item{fixed}{A named list of vectors of parameters with the same structure as `par`
+in `multiModalModel()`. Values that are not NULL will be fixed to those values, and
+not optimized.}
 }
 \value{
 The best parameters for N-modal distributions for a data set x.

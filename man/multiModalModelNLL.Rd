@@ -4,7 +4,7 @@
 \alias{multiModalModelNLL}
 \title{Likelihood of data given a multi-modal probability distribution.}
 \usage{
-multiModalModelNLL(par, x)
+multiModalModelNLL(par, x, fixed = NULL)
 }
 \arguments{
 \item{par}{A named vector with the model parameter (see details).}

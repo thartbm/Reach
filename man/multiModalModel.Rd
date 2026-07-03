@@ -4,7 +4,7 @@
 \alias{multiModalModel}
 \title{Probability of data points given a multi-modal distribution.}
 \usage{
-multiModalModel(par, x)
+multiModalModel(par, x, fixed)
 }
 \arguments{
 \item{par}{A named vector with the model parameter (see details).}

@@ -4,7 +4,7 @@
 \alias{multiModalFit}
 \title{Fit function to optimize an N-modal distributions to given data.}
 \usage{
-multiModalFit(x, n = 2, points = 9, best = 9)
+multiModalFit(x, n = 2, points = 9, best = 9, fixed = NULL)
 }
 \arguments{
 \item{x}{A sequence of numbers to evaluate the probability of.}
@@ -13,7 +13,10 @@ multiModalFit(x, n = 2, points = 9, best = 9)
 
 \item{points}{The number of points to search in each dimension of a search grid.}
 
-\item{best}{Return the parameters for the `best` best fits.}
+\item{best}{Return the parameters for the `best` best fits.
+#' @param fixed A named list of vectors of parameters with the same structure as `par`
+in `multiModalModel()`. Values that are not NULL will be fixed to those values, and
+not optimized.}
 }
 \value{
 The best parameters for N-modal distributions for a data set x.
@@ -23,5 +26,11 @@ This function is part of a set of functions to fit and
 evaluate multi-modal (normal) distribution of data points.
 }
 \examples{
-multiModalFit(x=c(rnorm(50,0,2),rnorm(100,10,4)), n=2, points=7, best=10)
+x=c(rnorm(50,0,2),rnorm(100,10,4))
+par <- multiModalFit(x=x, n=2, points=7, best=10)
+xd <- density(x, from=-5, to=15, n=201)
+plot(xd$x, xd$y, main='Multi-modal fit', xlab='x', ylab='Density', ylim=c(-.15,.5), col='blue', type='l')
+points(x, rep(-.1,length(x)), pch=20, col='gray')
+fitdist <- multiModalModel(par, xd$x)
+lines(xd$x, fitdist, col='red', lwd=2)
 }

@@ -693,13 +693,29 @@ offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11
 #' - w: weight
 #' for every normal distribution of the model
 #' @export
-multiModalModel <- function(par, x) {
+multiModalModel <- function(par, x, fixed) {
   
   probs <- rep(0, length(x))
   
   m <- par$m # means
   s <- par$s # standard deviations
   w <- par$w # weights
+  
+  mf <- fixed$m
+  sf <- fixed$s
+  wf <- fixed$w
+  for (i in c(1:length(m))) {
+    if (!is.null(mf[i])) {
+      m[i] <- mf[i]
+    }
+    if (!is.null(sf[i])) {
+      s[i] <- sf[i]
+    }
+    if (!is.null(wf[i])) {
+      w[i] <- wf[i]
+    }
+  }
+  
   
   # weights should add up to 1:
   w <- w / sum(w)
@@ -728,14 +744,14 @@ multiModalModel <- function(par, x) {
 #' - w: weight
 #' for every normal distribution of the model
 #' @export
-multiModalModelNLL <- function(par, x) {
+multiModalModelNLL <- function(par, x, fixed=NULL) {
   
   n = length(par)/3
   # print(list(c(1:n),c('m','s','w')))
   
   par <- data.frame(matrix(par,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
   
-  probs <- multiModalModel(par, x)
+  probs <- multiModalModel(par, x, fixed)
   
   probs[which((probs-1) == 0)] <- .Machine$double.eps
 
@@ -754,13 +770,16 @@ multiModalModelNLL <- function(par, x) {
 #' @param n The number of normal distributions to consider.
 #' @param points The number of points to search in each dimension of the search grid.
 #' @param best Return the parameters for the `best` best fits.
+#' @param fixed A named list of vectors of parameters with the same structure as `par`
+#' in `multiModalModel()`. Values that are not NULL will be fixed to those values, and
+#' not optimized.
 #' @return The best parameters for N-modal distributions for a data set x.
 #' @description This function is part of a set of functions to fit and
 #' evaluate multi-modal (normal) distribution of data points.
 #' @examples
 #' multiModalGridSearch(x=c(rnorm(50,0,2),rnorm(100,10,4)), n=2, points=7, best=10)
 #' @export
-multiModalGridSearch <- function(x, n=2, points=7, best=10) {
+multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
   
   # all parameter values to expand will be stored here:
   v <- list()
@@ -777,7 +796,7 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10) {
   df_grid <- expand.grid(v)
   
   # get all the likelihoods:
-  likelihoods <- apply(X=df_grid, MARGIN=c(1), FUN=multiModalModelNLL, x=x)
+  likelihoods <- apply(X=df_grid, MARGIN=c(1), FUN=multiModalModelNLL, x=x, fixed=fixed)
   
   # indexes of the best ones:
   idx <- order(unlist(likelihoods))[1:best]
@@ -792,15 +811,33 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10) {
 #' @param n The number of normal distributions to consider.
 #' @param points The number of points to search in each dimension of a search grid.
 #' @param best Return the parameters for the `best` best fits.
+#' #' @param fixed A named list of vectors of parameters with the same structure as `par`
+#' in `multiModalModel()`. Values that are not NULL will be fixed to those values, and
+#' not optimized.
 #' @return The best parameters for N-modal distributions for a data set x.
 #' @description This function is part of a set of functions to fit and
 #' evaluate multi-modal (normal) distribution of data points.
 #' @examples
-#' multiModalFit(x=c(rnorm(50,0,2),rnorm(100,10,4)), n=2, points=7, best=10)
+#' x=c(rnorm(50,0,2),rnorm(100,10,4))
+#' par <- multiModalFit(x=x, n=2, points=7, best=10)
+#' xd <- density(x, from=-5, to=15, n=201)
+#' plot(xd$x, xd$y, main='Multi-modal fit', xlab='x', ylab='Density', ylim=c(-.15,.5), col='blue', type='l')
+#' points(x, rep(-.1,length(x)), pch=20, col='gray')
+#' fitdist <- multiModalModel(par, xd$x)
+#' lines(xd$x, fitdist, col='red', lwd=2)
 #' @export
-multiModalFit <- function(x, n=2, points=9, best=9) {
-
-  x <- sort(x)
+multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
+  
+  x <- sort(x) # this removes NAs
+  
+  if (is.null(fixed)) {
+    fixed <- list()
+    for (i in c(1:n)) {
+      fixed[[sprintf('m%d', i)]] <- NULL
+      fixed[[sprintf('s%d', i)]] <- NULL
+      fixed[[sprintf('w%d', i)]] <- NULL
+    }
+  }
   
   top <- Reach::multiModalGridSearch(x, n, points=points, best=best)
   
@@ -839,8 +876,12 @@ multiModalFit <- function(x, n=2, points=9, best=9) {
   # pick the best fit:
   win <- allfits[order(unlist(allfits$value))[1],]
   
+  print(win)
+  
   # make usable, extract parameter values:
   winpar <- as.numeric(unlist(win)[1:(3*n)])
+  
+  print(winpar)
   
   # convert to data frame (as in likelihood function, and as expected by the model function):
   dfpar <- data.frame(matrix(winpar,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
