@@ -882,17 +882,11 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   # pick the best fit:
   win <- allfits[order(unlist(allfits$value))[1],]
   
-  print(win)
-  
   # make usable, extract parameter values:
   winpar <- as.numeric(unlist(win)[1:(3*n)])
-  
-  print(winpar)
-  
+
   # convert to data frame (as in likelihood function, and as expected by the model function):
   dfpar <- data.frame(matrix(winpar,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
-  
-  print(fixed)
   
   for (i in c(1:n)) {
     # print(i)
