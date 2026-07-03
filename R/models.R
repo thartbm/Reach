@@ -822,9 +822,9 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
 #' @examples
 #' x=c(rnorm(50,0,2),rnorm(50,10,4))
 #' par <- multiModalFit(x=x, n=2, points=7, best=10)
-#' xd <- density(x, from=-5, to=15, n=201)
-#' plot(xd$x, xd$y, main='Multi-modal fit', xlab='x', ylab='Density', ylim=c(-.01,.1), col='blue', type='l')
-#' points(x, rep(-.01,length(x)), pch=20, col='#99999933', cex=2)
+#' xd <- density(x, from=-5, to=20, n=251)
+#' plot(xd$x, xd$y, main='Multi-modal fit', xlab='x', ylab='Density', ylim=c(-.01,.12), col='blue', type='l')
+#' points(x, rep(-.005,length(x)), pch=20, col='#99999933', cex=2)
 #' fitdist <- multiModalModel(par, xd$x)
 #' lines(xd$x, fitdist, col='red', lwd=2)
 #' @export
