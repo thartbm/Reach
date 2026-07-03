@@ -702,18 +702,18 @@ multiModalModel <- function(par, x, fixed=NULL) {
   w <- par$w # weights
   
   if (!is.null(fixed)) {
-    mf <- fixed$m
-    sf <- fixed$s
-    wf <- fixed$w
+    # mf <- fixed$m
+    # sf <- fixed$s
+    # wf <- fixed$w
     for (i in c(1:length(m))) {
-      if (!is.null(mf[i])) {
-        m[i] <- mf[i]
+      if (!is.na(fixed$m[i])) {
+        m[i] <- fixed$m[i]
       }
-      if (!is.null(sf[i])) {
-        s[i] <- sf[i]
+      if (!is.na(fixed$s[i])) {
+        s[i] <- fixed$s[i]
       }
-      if (!is.null(wf[i])) {
-        w[i] <- wf[i]
+      if (!is.na(fixed$s[i])) {
+        w[i] <- fixed$s[i]
       }
     }
   }
@@ -836,9 +836,9 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   if (is.null(fixed)) {
     fixed <- list()
     for (i in c(1:n)) {
-      fixed[[sprintf('m%d', i)]] <- NULL
-      fixed[[sprintf('s%d', i)]] <- NULL
-      fixed[[sprintf('w%d', i)]] <- NULL
+      fixed[[sprintf('m%d', i)]] <- NA
+      fixed[[sprintf('s%d', i)]] <- NA
+      fixed[[sprintf('w%d', i)]] <- NA
     }
     fixed <- data.frame(matrix(fixed,byrow=TRUE,ncol=3,dimnames=list(c(1:n),c('m','s','w'))))
   }
@@ -895,13 +895,13 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
   
   for (i in c(1:n)) {
     # print(i)
-    if (!is.null(fixed$m[i])) {
+    if (!is.na(fixed$m[i])) {
       dfpar$m[i] <- fixed$m[i]
     }
-    if (!is.null(fixed$s[i])) {
+    if (!is.na(fixed$s[i])) {
       dfpar$s[i] <- fixed$s[i]
     }
-    if (!is.null(fixed$w[i])) {
+    if (!is.na(fixed$w[i])) {
       dfpar$w[i] <- fixed$w[i]
     }
   }
