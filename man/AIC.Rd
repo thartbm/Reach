@@ -28,6 +28,10 @@ of data, with lower values indicating better model fit.
 Either a vector of MSE values or a vector of log-likelihoods must be provided,
 along with the number of free parameters (k) for each model and the number of observations 
 (N) in the data set.
+
+It is customary (e.g. in other functions here) to minimize the _negative_ log-likelihood, 
+so that lower values indicate better fits. Make sure to multiply it any _negative_ 
+log-likelihoods by -1 for use in this function.
 }
 \examples{
 #
