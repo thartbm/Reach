@@ -956,3 +956,30 @@ AICc <- function(MSE, k, N) {
 relativeLikelihood <- function(crit) {
   return( exp( ( min( crit  ) - crit  ) / 2 ) )
 }
+
+#' @title negative log-likelihood.
+#' @param d Vector of density values for observations given a model.
+#' @description This function calculates the negative log-likelihood of a set of density
+#' values. It is used to evaluate how well a model fits the data, with lower values 
+#' indicating a better fit.
+#' @details The input vector `d` should contain the density values for each observation 
+#' given a model. The function will replace any density values that are exactly 1 with 
+#' a very small value to avoid taking the log of 0, which would result in an infinite 
+#' negative log-likelihood. If the resulting negative log-likelihood is not finite, it 
+#' will be set to the minimum possible value based on the number of observations.
+#' @examples
+#' # 
+#' @export
+nll <- function(d) {
+  
+  d[which((d-1) == 0)] <- .Machine$double.eps # maybe this should be made closer to 1?
+  
+  nll <- -1 * sum(log(d))
+  
+  if (!is.finite(nll)) {
+    nll <- -1 * sum(log(rep(.Machine$double.eps, length(d)))) # minimum probability
+  }
+  
+  return(nll)
+  
+}
