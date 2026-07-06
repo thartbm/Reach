@@ -4,10 +4,12 @@
 \alias{AIC}
 \title{Calculate AIC based on MSE.}
 \usage{
-AIC(MSE, k, N)
+AIC(MSE = NULL, logLik = NULL, k, N)
 }
 \arguments{
 \item{MSE}{A vector of Mean Squared Errors, one for each model.}
+
+\item{logLik}{A vector of log-likelihoods, one for each model.}
 
 \item{k}{A vector of the number of free parameters for each model.}
 
@@ -17,10 +19,15 @@ AIC(MSE, k, N)
 A vector of AIC values for each model.
 }
 \description{
-This function
+This function calculates a vector of AIC values for a set of models, 
+based on either their mean squared errors (MSE) or their log-likelihoods. 
+The AIC is a measure of the relative quality of statistical models for a given set
+of data, with lower values indicating better model fit.
 }
 \details{
-#
+Either a vector of MSE values or a vector of log-likelihoods must be provided,
+along with the number of free parameters (k) for each model and the number of observations 
+(N) in the data set.
 }
 \examples{
 #

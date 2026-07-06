@@ -915,20 +915,42 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
 
 #' @title Calculate AIC based on MSE.
 #' @param MSE A vector of Mean Squared Errors, one for each model.
+#' @param logLik A vector of log-likelihoods, one for each model.
 #' @param k A vector of the number of free parameters for each model.
 #' @param N The number of observations in the data set.
 #' @return A vector of AIC values for each model.
-#' @description This function 
-#' @details
-#' #
+#' @description This function calculates a vector of AIC values for a set of models, 
+#' based on either their mean squared errors (MSE) or their log-likelihoods. 
+#' The AIC is a measure of the relative quality of statistical models for a given set
+#' of data, with lower values indicating better model fit.
+#' @details Either a vector of MSE values or a vector of log-likelihoods must be provided,
+#' along with the number of free parameters (k) for each model and the number of observations 
+#' (N) in the data set.
 #' @examples
 #' #
 #' @export
-AIC <- function(MSE, k, N) {
+AIC <- function(MSE=NULL, logLik=NULL, k, N) {
+  
   # MSE based:
-  return( (N * log(MSE)) + (2 * k) )
+  if (!is.null(MSE)) {
+    if (length(MSE) != length(k)) {
+      stop("MSE and k must have the same length.")
+    } else {
+      return( (N * log(MSE)) + (2 * k) )
+    }
+  }
+  
   # Likelihood based:
-  # return( 2 * k - 2 * abs(lL) )
+  if (!is.null(logLik)) {
+    if (length(logLik) != length(k)) {
+      stop("logLik and k must have the same length.")
+    } else {
+      return( 2 * k - 2 * logLik )
+    }
+  }
+  
+  cat('No MSE nor logLik provided, cannot calculate AIC.\n')
+  return(NULL)
 }
 
 #' @title Calculate AIC based on MSE, corrected for low parameter models.
@@ -975,7 +997,11 @@ relativeLikelihood <- function(crit) {
 #' @export
 nll <- function(d) {
   
-  d[which((d-1) == 0)] <- .Machine$double.eps # maybe this should be made closer to 1?
+  # remove values resulting in errors or Infs?
+  d <- d[which(!is.na(d))]
+  d[which(d < .Machine$double.eps)] <- .Machine$double.eps
+  
+  # d[which((d-1) == 0)] <- .Machine$double.eps # maybe this should be made closer to 1?
   
   nll <- -1 * sum(log(d))
   
