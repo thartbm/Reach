@@ -1054,8 +1054,8 @@ fitProbDens <- function(x, densfun='normal') {
   )
   
   fit <- optim(par=par, 
-               fn=function(par) {
-                 Reach::nll(FUN(x, par[1], par[2]))
+               fn=function(par, x) {
+                 Reach::nll(FUN(par, x))
                },
                x=x)
   
