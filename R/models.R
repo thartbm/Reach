@@ -1059,5 +1059,5 @@ fitProbDens <- function(x, densfun='normal') {
                },
                x=x)
   
-  return(fit)
+  return(fit$par)
 }
