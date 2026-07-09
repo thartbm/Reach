@@ -1015,3 +1015,49 @@ nll <- function(d) {
   return(nll)
   
 }
+
+
+# distributions -----
+
+#' @title Fit a probability density function to a vector of data.
+#' @param x Vector of data points
+#' @param densfun String indicating the type of density function to fit. Options are:
+#' - 'normal': Normal distribution
+#' - 'lognormal': Log-normal distribution
+#' - 'gamma': Gamma distribution
+#' - 'beta': Beta distribution
+#' @description This function fits a specified probability density function to a vector
+#' of data points. It uses maximum likelihood estimation to find the best-fitting 
+#' parameters for the chosen distribution.
+#' @details The function supports fitting the following distributions:
+#' - Normal distribution: Parameters are mean and standard deviation.
+#' - Log-normal distribution: Parameters are meanlog and sdlog.
+#' - Gamma distribution: Parameters are shape and scale.
+#' - Beta distribution: Parameters are shape1 and shape2.
+#' @examples
+#' # 
+#' @export
+fitProbDens <- function(x, densfun='normal') {
+  
+  FUN <- switch(densfun,
+                'normal' = function(par, x) { dnorm(x, mean=par[1], sd=par[2]) },
+                'lognormal' = function(par, x) { dlnorm(x, meanlog=par[1], sdlog=par[2]) },
+                'gamma' = function(par, x) { dgamma(x, shape=par[1], scale=par[2]) },
+                'beta' = function(par, x) { dbeta(x, shape1=par[1], shape2=par[2]) },
+                stop("Unsupported density function."))
+  
+  par <- switch(densfun,
+                'normal' = c(mean=mean(x), sd=sd(x)),
+                'lognormal' = c(meanlog=mean(log(x)), sdlog=sd(log(x))),
+                'gamma' = c(shape=mean(x)^2/var(x), scale=var(x)/mean(x)),
+                'beta' = c(shape1=mean(x)*((mean(x)*(1-mean(x)))/var(x)-1), shape2=(1-mean(x))*((mean(x)*(1-mean(x)))/var(x)-1))
+  )
+  
+  fit <- optim(par=par, 
+               fn=function(par) {
+                 Reach::nll(FUN(par, x))
+               },
+               x=x)
+  
+  return(fit)
+}
