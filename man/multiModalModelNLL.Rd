@@ -10,6 +10,8 @@ multiModalModelNLL(par, x, fixed = NULL)
 \item{par}{A named vector with the model parameter (see details).}
 
 \item{x}{A sequence of numbers to evaluate the probability of.}
+
+\item{fixed}{A named list of vectors of parameters with the same structure as `par`}
 }
 \value{
 The sum of the log of the probabilities returned by `multiModalModel()`.

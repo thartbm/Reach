@@ -677,6 +677,7 @@ offsetErrorDecayFit <- function(signal, timepoints=length(signal), gridpoints=11
 #' @title Probability of data points given a multi-modal distribution.
 #' @param par A named vector with the model parameter (see details).
 #' @param x A sequence of numbers to evaluate the probability of.
+#' @param fixed A named list of vectors of parameters with the same structure as `par`
 #' @return A vector of probabilities according to the multi modal normal distribution.
 #' @description This function is part of a set of functions to fit and
 #' evaluate multi modal (normal) distribution of data points.
@@ -737,6 +738,7 @@ multiModalModel <- function(par, x, fixed=NULL) {
 #' @title Likelihood of data given a multi-modal probability distribution.
 #' @param par A named vector with the model parameter (see details).
 #' @param x A sequence of numbers to evaluate the probability of.
+#' @param fixed A named list of vectors of parameters with the same structure as `par`
 #' @return The sum of the log of the probabilities returned by `multiModalModel()`.
 #' @description This function is part of a set of functions to fit and
 #' evaluate multi modal (normal) distribution of data points.
@@ -813,7 +815,7 @@ multiModalGridSearch <- function(x, n=2, points=7, best=10, fixed=NULL) {
 #' @param n The number of normal distributions to consider.
 #' @param points The number of points to search in each dimension of a search grid.
 #' @param best Return the parameters for the `best` best fits.
-#' #' @param fixed A named list of vectors of parameters with the same structure as `par`
+#' @param fixed A named list of vectors of parameters with the same structure as `par`
 #' in `multiModalModel()`. Values that are not NULL will be fixed to those values, and
 #' not optimized.
 #' @return The best parameters for N-modal distributions for a data set x.
@@ -856,8 +858,9 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
 
 
   lo <- rep( c(min(x), min(abs(diff(x)))/2, 0.01), n)
-  hi <- rep( c(max(x), abs(diff(range(x))), 0.99), n)
-
+  # hi <- rep( c(max(x), abs(diff(range(x))), 0.99), n)
+  hi <- rep( c(max(x),               sd(x), 0.99), n)
+  
   # print(data.frame(lo,hi))
   
   # control <- list('maximize'=FALSE) # optimx

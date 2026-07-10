@@ -10,6 +10,8 @@ multiModalModel(par, x, fixed = NULL)
 \item{par}{A named vector with the model parameter (see details).}
 
 \item{x}{A sequence of numbers to evaluate the probability of.}
+
+\item{fixed}{A named list of vectors of parameters with the same structure as `par`}
 }
 \value{
 A vector of probabilities according to the multi modal normal distribution.

@@ -13,8 +13,9 @@ multiModalFit(x, n = 2, points = 9, best = 9, fixed = NULL)
 
 \item{points}{The number of points to search in each dimension of a search grid.}
 
-\item{best}{Return the parameters for the `best` best fits.
-#' @param fixed A named list of vectors of parameters with the same structure as `par`
+\item{best}{Return the parameters for the `best` best fits.}
+
+\item{fixed}{A named list of vectors of parameters with the same structure as `par`
 in `multiModalModel()`. Values that are not NULL will be fixed to those values, and
 not optimized.}
 }
