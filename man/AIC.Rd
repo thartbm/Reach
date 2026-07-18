@@ -2,7 +2,7 @@
 % Please edit documentation in R/models.R
 \name{AIC}
 \alias{AIC}
-\title{Calculate AIC based on MSE.}
+\title{Calculate AIC based on MSE or log-likelihood.}
 \usage{
 AIC(MSE = NULL, logLik = NULL, k, N)
 }
@@ -26,8 +26,8 @@ of data, with lower values indicating better model fit.
 }
 \details{
 Either a vector of MSE values or a vector of log-likelihoods must be provided,
-along with the number of free parameters (k) for each model and the number of observations 
-(N) in the data set.
+along with the number of free parameters (k) for each model and for MSE-based approach,
+the number of observations (N) in the data set.
 
 It is customary (e.g. in other functions here) to minimize the _negative_ log-likelihood, 
 so that lower values indicate better fits. Make sure to multiply it any _negative_ 

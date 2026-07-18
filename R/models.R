@@ -916,7 +916,7 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
 # Model Evaluation -----
 
 
-#' @title Calculate AIC based on MSE.
+#' @title Calculate AIC based on MSE or log-likelihood.
 #' @param MSE A vector of Mean Squared Errors, one for each model.
 #' @param logLik A vector of log-likelihoods, one for each model.
 #' @param k A vector of the number of free parameters for each model.
@@ -927,8 +927,8 @@ multiModalFit <- function(x, n=2, points=9, best=9, fixed=NULL) {
 #' The AIC is a measure of the relative quality of statistical models for a given set
 #' of data, with lower values indicating better model fit.
 #' @details Either a vector of MSE values or a vector of log-likelihoods must be provided,
-#' along with the number of free parameters (k) for each model and the number of observations 
-#' (N) in the data set.
+#' along with the number of free parameters (k) for each model and for MSE-based approach,
+#' the number of observations (N) in the data set.
 #' 
 #' It is customary (e.g. in other functions here) to minimize the _negative_ log-likelihood, 
 #' so that lower values indicate better fits. Make sure to multiply it any _negative_ 
