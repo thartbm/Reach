@@ -974,6 +974,46 @@ AICc <- function(MSE, k, N) {
   return( AIC(MSE, k, N) * (((2*k^2) + 2*k) / (N - k - 1)) )
 }
 
+
+#' @title Calculate BIC based on log-likelihood.
+#' @param logLik A vector of log-likelihoods, one for each model.
+#' @param k A vector of the number of free parameters for each model.
+#' @param N The number of observations in the data set.
+#' @return A vector of AIC values for each model.
+#' @description This function calculates a vector of BIC values for a set of models, 
+#' based on either their log-likelihoods. 
+#' The BIC is a measure of the relative quality of statistical models for a given set
+#' of data, with lower values indicating better model fit.
+#' @details A vector of log-likelihoods must be provided, along with the number of 
+#' free parameters (k) as well as the number of observations (N) in the data set.
+#' 
+#' The function checks if the length of the vectors of log-likelihoods and parameters
+#' match. It does not check if the vector of the number of observations match, since
+#' the assumption is that the BICs are all for models based on the same data set.
+#' However, if N is provided as a vector that will be used, potentially 'recycling'
+#' elements of the vector to match the length of the other vectors.
+#' 
+#' It is customary (e.g. in other functions here) to minimize the _negative_ log-likelihood, 
+#' so that lower values indicate better fits. Make sure to multiply any _negative_ 
+#' log-likelihoods by -1 before using this function.
+#' @examples
+#' #
+#' @export
+BIC <- function(logLik, k, N) {
+
+  # Likelihood based:
+  if (!is.null(logLik)) {
+    if (length(logLik) != length(k)) {
+      stop("logLik and k must have the same length.")
+    } else {
+      return( log(N) * k - 2 * logLik )
+    }
+  }
+  
+}
+
+
+
 #' @title Calculate relative likelihood.
 #' @param crit Vector of criterion values for models.
 #' @return Vector of likelihoods. The best model will have a likelihood of 1, and
