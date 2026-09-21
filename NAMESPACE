@@ -3,6 +3,7 @@
 export("%notin%")
 export(AIC)
 export(AICc)
+export(BIC)
 export(circleCorrect)
 export(circleErrors)
 export(circleFit)
