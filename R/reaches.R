@@ -381,6 +381,7 @@ getSplinedVelocity <- function(x, y, t, spar=0.01) {
 #' @param timecourse A vector of values of length>minn representing a timecourse.
 #' @param minn Minimum number of samples to consider for stabilization (default: 10).
 #' @param na.rm Logical, whether to remove NA values (default: TRUE).
+#' @param alpha Significance level for the confidence interval (default: 0.05).
 #' @return Index of the sample where the timecourse stabilizes.
 #' @description Index where a timecourse stabilizes as determined by the minimum width
 #' of the 95\% confidence interval of the mean from each trial up to the end of the timecourse.
@@ -416,7 +417,7 @@ getSplinedVelocity <- function(x, y, t, spar=0.01) {
 #'   lines(c(index:length(ppdata)), ppdata[c(index:length(ppdata))], col='blue')
 #' }
 #' @export
-findStabilizationTrial <- function(timecourse, minn=10, na.rm=TRUE) {
+findStabilizationTrial <- function(timecourse, minn=10, na.rm=TRUE, alpha=0.05) {
   
   CI_widths <- c() 
   
@@ -432,7 +433,7 @@ findStabilizationTrial <- function(timecourse, minn=10, na.rm=TRUE) {
     # ci_lower <- robust_mean - 1.96 * (stats::mad / sqrt_n)
     # ci_upper <- robust_mean + 1.96 * (stats::mad / sqrt_n)
     
-    CI_width <- 2 * (stats::qnorm(0.975) * (smad / sqrt_n))
+    CI_width <- 2 * (stats::qnorm(1-(alpha/2)) * (smad / sqrt_n))
     
     CI_widths <- c(CI_widths, CI_width)
   }

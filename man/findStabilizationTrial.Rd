@@ -4,7 +4,7 @@
 \alias{findStabilizationTrial}
 \title{Find index where a timecourse stabilizes using the width of the 95\% CI.}
 \usage{
-findStabilizationTrial(timecourse, minn = 10, na.rm = TRUE)
+findStabilizationTrial(timecourse, minn = 10, na.rm = TRUE, alpha = 0.05)
 }
 \arguments{
 \item{timecourse}{A vector of values of length>minn representing a timecourse.}
@@ -12,6 +12,8 @@ findStabilizationTrial(timecourse, minn = 10, na.rm = TRUE)
 \item{minn}{Minimum number of samples to consider for stabilization (default: 10).}
 
 \item{na.rm}{Logical, whether to remove NA values (default: TRUE).}
+
+\item{alpha}{Significance level for the confidence interval (default: 0.05).}
 }
 \value{
 Index of the sample where the timecourse stabilizes.
